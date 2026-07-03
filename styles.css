@@ -2698,3 +2698,29 @@ body::before { display: none; }
   .product-slide-copy li::before,
   .product-slide-copy li::after { transition: none; }
 }
+
+/* ============================================================
+   REDESIGN LAYER 9 — underline back up, tighter section rhythm
+   ============================================================ */
+
+/* the descender padding pushed the h3 accent line down; the +.16em cancels
+   that shift so the line sits ~14px under the name for every slide */
+.product-slide-copy h3::after { bottom: calc(-14px + .16em); }
+
+/* sections had 128px top+bottom (256px between) with no special reason —
+   halve it for a tighter rhythm */
+.section { padding-top: 64px; padding-bottom: 64px; }
+
+/* spotlights: cluster the three sources so the beams converge on the eclair,
+   and keep the bulbs inside the frame so they don't look cut at the top */
+.product-spotlight::before {
+  inset: -14px -12% 0;
+  background:
+    radial-gradient(circle at 42% 5%, rgba(255,245,218,.82) 0 2.6%, rgba(231,176,105,.38) 5.2%, transparent 8.4%),
+    radial-gradient(circle at 50% 5%, rgba(255,245,218,.9) 0 2.7%, rgba(231,176,105,.42) 5.4%, transparent 8.8%),
+    radial-gradient(circle at 58% 5%, rgba(255,245,218,.82) 0 2.6%, rgba(231,176,105,.38) 5.2%, transparent 8.4%),
+    conic-gradient(at 42% 1%, transparent 0 160deg, rgba(255,232,183,.36) 168deg, rgba(218,147,76,.12) 174deg, transparent 179deg 360deg),
+    conic-gradient(at 50% 1%, transparent 0 175deg, rgba(255,236,196,.42) 180deg, rgba(218,147,76,.13) 185deg, transparent 189deg 360deg),
+    conic-gradient(at 58% 1%, transparent 0 181deg, rgba(218,147,76,.12) 186deg, rgba(255,232,183,.36) 192deg, transparent 200deg 360deg),
+    radial-gradient(ellipse at 50% 56%, rgba(200,116,43,.30), transparent 38%);
+}

@@ -632,7 +632,7 @@ if (atelierPlayer) {
         i++;
       }
       step(); // start on the first item
-      setInterval(step, 1150);
+      setInterval(step, 2000);
     });
   }
 
