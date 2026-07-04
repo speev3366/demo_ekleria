@@ -2721,7 +2721,7 @@ body::before { display: none; }
   align-items: flex-end;
   justify-content: center;
   gap: 0;
-  width: min(41vw, 700px); /* sit within the visible podium disc */
+  width: min(37vw, 630px); /* sit comfortably within the visible podium disc */
 }
 /* eclairs sitting almost shoulder-to-shoulder; the overlap cancels the
    transparent margins baked into the PNGs so they read as nearly touching */
@@ -2758,7 +2758,7 @@ body::before { display: none; }
 /* --- trio eclair sizing: keep every flavour the same appetising size,
    with charcoal & dark-chocolate a touch bigger/expressive --- */
 .eclair-pedestal.boutique-render.charcoal-render.trio {
-  width: min(41vw, 700px); /* match the others */
+  width: min(37vw, 630px); /* match the others */
 }
 .eclair-pedestal.boutique-render.trio img[src*="charcoal"] {
   width: 40%;
@@ -2784,12 +2784,12 @@ body::before { display: none; }
     padding: 24px 0 22px;
   }
   .eclair-pedestal.boutique-render.trio {
-    width: min(61vw, 278px); /* eclairs +5% on phone */
-    transform: translateY(-30px); /* lift them off the podium a touch */
+    width: min(66vw, 300px); /* eclairs a touch bigger on phone */
+    transform: translateY(-12px); /* sit closer down on the podium */
   }
   .eclair-pedestal.boutique-render.trio img {
     width: 40%;
-    max-height: 116px;
+    max-height: 124px;
   }
   .eclair-pedestal.boutique-render.trio img:not(:first-child) {
     margin-left: -13%; /* closer together */
@@ -2799,11 +2799,14 @@ body::before { display: none; }
     height: 100px;
     bottom: 12px;
   }
-  /* aim the three beams onto the (now tighter) eclair group;
-     keep the glow inside the card and off the area under the podium */
+  /* beams: fade the bottom smoothly (soft mask) instead of a hard clip, so the
+     light reaches down level with the podium without a cut-off line or a pool
+     of light under the stand */
   .product-spotlight:has(.trio)::before,
   .product-spotlight:has(.roll-render)::before {
-    inset: -8px -1% 86px;
+    inset: -8px -1% 0;
+    -webkit-mask: linear-gradient(180deg, #000 0 58%, transparent 86%);
+            mask: linear-gradient(180deg, #000 0 58%, transparent 86%);
     background:
       radial-gradient(circle at 30% -2%, rgba(255,245,218,.82) 0 2.2%, rgba(231,176,105,.38) 4.4%, transparent 7.4%),
       radial-gradient(circle at 50% -2%, rgba(255,245,218,.88) 0 2.3%, rgba(231,176,105,.42) 4.6%, transparent 7.8%),
