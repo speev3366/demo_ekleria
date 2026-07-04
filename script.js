@@ -642,3 +642,31 @@ if (atelierPlayer) {
     run();
   }
 })();
+
+/* ============================================================
+   EXPERIMENT — trio eclairs: show each eclair x3 on the podium
+   (roll is excluded via .roll-render). Remove this block + the
+   matching CSS "EXPERIMENT" layer to revert.
+   ============================================================ */
+(function initTrioEclairs() {
+  function run() {
+    var pedestals = document.querySelectorAll(".eclair-pedestal.boutique-render:not(.roll-render)");
+    pedestals.forEach(function (fig) {
+      if (fig.classList.contains("trio")) return;
+      var img = fig.querySelector("img");
+      if (!img) return;
+      for (var k = 0; k < 2; k++) {
+        var clone = img.cloneNode(true);
+        clone.removeAttribute("loading");
+        clone.setAttribute("aria-hidden", "true");
+        fig.appendChild(clone);
+      }
+      fig.classList.add("trio");
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+})();
