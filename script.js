@@ -670,3 +670,28 @@ if (atelierPlayer) {
     run();
   }
 })();
+
+/* ============================================================
+   Auto-hide the header on scroll down, reveal on scroll up.
+   ============================================================ */
+(function initHeaderAutohide() {
+  var header = document.querySelector(".site-header");
+  if (!header) return;
+  var lastY = window.scrollY;
+  var ticking = false;
+  function update() {
+    var y = Math.max(0, window.scrollY);
+    if (document.body.classList.contains("menu-open") || y < 90) {
+      header.classList.remove("header-hidden");
+    } else if (y > lastY + 5) {
+      header.classList.add("header-hidden");   // scrolling down
+    } else if (y < lastY - 5) {
+      header.classList.remove("header-hidden"); // scrolling up
+    }
+    lastY = y;
+    ticking = false;
+  }
+  window.addEventListener("scroll", function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+})();

@@ -2720,15 +2720,16 @@ body::before { display: none; }
   align-items: flex-end;
   justify-content: center;
   gap: 0;
+  width: min(43vw, 738px); /* −10% so they don't spill off the podium */
 }
-/* larger eclairs sitting almost shoulder-to-shoulder; the overlap cancels the
+/* eclairs sitting almost shoulder-to-shoulder; the overlap cancels the
    transparent margins baked into the PNGs so they read as nearly touching */
 .eclair-pedestal.boutique-render.trio img {
   width: 40%;
   scale: 1;
 }
 .eclair-pedestal.boutique-render.trio img:not(:first-child) {
-  margin-left: -15%; /* almost glued together */
+  margin-left: -16%; /* almost glued together */
 }
 /* charcoal PNGs carry more empty space + a tilt, so they need extra pull-in */
 .eclair-pedestal.boutique-render.trio img[src*="charcoal"]:not(:first-child) {
@@ -2738,28 +2739,31 @@ body::before { display: none; }
 .eclair-pedestal.boutique-render.trio img:nth-child(2) { animation-delay: -2.1s; }
 .eclair-pedestal.boutique-render.trio img:nth-child(3) { animation-delay: -4.2s; }
 
-/* three beams onto the eclairs — the two end beams angle inward ~25° */
-.product-spotlight:has(.trio)::before {
+/* crossed beams — end sources sit wider (toward the corners) and angle in.
+   Same look is applied to the roll slide too. */
+.product-spotlight:has(.trio)::before,
+.product-spotlight:has(.roll-render)::before {
   background:
-    radial-gradient(circle at 40% -2%, rgba(255,245,218,.82) 0 2.4%, rgba(231,176,105,.38) 4.8%, transparent 8%),
+    radial-gradient(circle at 34% -2%, rgba(255,245,218,.82) 0 2.4%, rgba(231,176,105,.38) 4.8%, transparent 8%),
     radial-gradient(circle at 50% -2%, rgba(255,245,218,.88) 0 2.5%, rgba(231,176,105,.42) 5%, transparent 8.4%),
-    radial-gradient(circle at 60% -2%, rgba(255,245,218,.82) 0 2.4%, rgba(231,176,105,.38) 4.8%, transparent 8%),
-    conic-gradient(at 40% -6%, transparent 0 137deg, rgba(255,232,183,.34) 145deg, rgba(218,147,76,.12) 152deg, transparent 157deg 360deg),
+    radial-gradient(circle at 66% -2%, rgba(255,245,218,.82) 0 2.4%, rgba(231,176,105,.38) 4.8%, transparent 8%),
+    conic-gradient(at 34% -6%, transparent 0 137deg, rgba(255,232,183,.34) 145deg, rgba(218,147,76,.12) 152deg, transparent 157deg 360deg),
     conic-gradient(at 50% -6%, transparent 0 173deg, rgba(255,236,196,.4) 180deg, rgba(218,147,76,.13) 186deg, transparent 189deg 360deg),
-    conic-gradient(at 60% -6%, transparent 0 203deg, rgba(218,147,76,.12) 208deg, rgba(255,232,183,.34) 215deg, transparent 223deg 360deg),
+    conic-gradient(at 66% -6%, transparent 0 203deg, rgba(218,147,76,.12) 208deg, rgba(255,232,183,.34) 215deg, transparent 223deg 360deg),
     radial-gradient(ellipse at 50% 58%, rgba(200,116,43,.28), transparent 40%);
 }
 
 /* --- trio eclair sizing: keep every flavour the same appetising size,
    with charcoal & dark-chocolate a touch bigger/expressive --- */
 .eclair-pedestal.boutique-render.charcoal-render.trio {
-  width: min(48vw, 820px); /* was narrower — match the others */
+  width: min(43vw, 738px); /* match the others, −10% */
 }
 .eclair-pedestal.boutique-render.trio img[src*="charcoal"] {
   width: 40%;
   scale: 1.08;      /* bring it a touch closer/forward */
-  rotate: 12deg;    /* same recline as the dark-chocolate eclairs */
-  translate: 0 0;
+  rotate: 22deg;    /* charcoal PNG has a steep baked-in tilt; more CSS
+                       rotation actually lays it flatter */
+  translate: 0 16px; /* nudge down closer to the podium */
 }
 .eclair-pedestal.boutique-render.trio img[src*="dark-chocolate"] {
   width: 42%;       /* +5% over the base, expressive but still on the podium */
@@ -2778,31 +2782,56 @@ body::before { display: none; }
     padding: 24px 0 22px;
   }
   .eclair-pedestal.boutique-render.trio {
-    width: min(58vw, 265px);
+    width: min(61vw, 278px); /* eclairs +5% on phone */
     transform: translateY(-30px); /* lift them off the podium a touch */
   }
   .eclair-pedestal.boutique-render.trio img {
     width: 40%;
-    max-height: 110px;
+    max-height: 116px;
   }
   .eclair-pedestal.boutique-render.trio img:not(:first-child) {
     margin-left: -13%; /* closer together */
   }
   .product-slide:has(.trio) .product-spotlight::after {
-    width: min(78vw, 424px); /* scene −5% + another −5% */
-    height: 106px;
+    width: min(73vw, 398px); /* pedestal −5-6% */
+    height: 100px;
     bottom: 12px;
   }
-  /* aim the three beams onto the (now tighter) eclair group */
-  .product-spotlight:has(.trio)::before {
-    inset: -8px -8% 0;
+  /* aim the three beams onto the (now tighter) eclair group;
+     keep the glow inside the card and off the area under the podium */
+  .product-spotlight:has(.trio)::before,
+  .product-spotlight:has(.roll-render)::before {
+    inset: -8px -1% 86px;
     background:
-      radial-gradient(circle at 36% -2%, rgba(255,245,218,.82) 0 2.2%, rgba(231,176,105,.38) 4.4%, transparent 7.4%),
+      radial-gradient(circle at 30% -2%, rgba(255,245,218,.82) 0 2.2%, rgba(231,176,105,.38) 4.4%, transparent 7.4%),
       radial-gradient(circle at 50% -2%, rgba(255,245,218,.88) 0 2.3%, rgba(231,176,105,.42) 4.6%, transparent 7.8%),
-      radial-gradient(circle at 64% -2%, rgba(255,245,218,.82) 0 2.2%, rgba(231,176,105,.38) 4.4%, transparent 7.4%),
-      conic-gradient(at 36% -5%, transparent 0 137deg, rgba(255,232,183,.34) 145deg, rgba(218,147,76,.12) 152deg, transparent 157deg 360deg),
+      radial-gradient(circle at 70% -2%, rgba(255,245,218,.82) 0 2.2%, rgba(231,176,105,.38) 4.4%, transparent 7.4%),
+      conic-gradient(at 30% -5%, transparent 0 137deg, rgba(255,232,183,.34) 145deg, rgba(218,147,76,.12) 152deg, transparent 157deg 360deg),
       conic-gradient(at 50% -5%, transparent 0 173deg, rgba(255,236,196,.4) 180deg, rgba(218,147,76,.13) 186deg, transparent 189deg 360deg),
-      conic-gradient(at 64% -5%, transparent 0 203deg, rgba(218,147,76,.12) 208deg, rgba(255,232,183,.34) 215deg, transparent 223deg 360deg),
+      conic-gradient(at 70% -5%, transparent 0 203deg, rgba(218,147,76,.12) 208deg, rgba(255,232,183,.34) 215deg, transparent 223deg 360deg),
       radial-gradient(ellipse at 50% 60%, rgba(200,116,43,.26), transparent 42%);
   }
+}
+
+/* ============================================================
+   Auto-hide header — slides up when scrolling down, reveals on
+   scroll up (kept visible near the top and while the menu is open)
+   ============================================================ */
+.site-header {
+  transition: background .28s ease, border-color .28s ease, color .28s ease,
+    box-shadow .28s ease, transform .45s cubic-bezier(.22, 1, .36, 1);
+  will-change: transform;
+}
+.site-header.header-hidden {
+  transform: translateY(calc(-100% - 22px));
+}
+body.menu-open .site-header.header-hidden {
+  transform: none;
+}
+
+/* EXPERIMENT (cont.) — desktop: drop the podium + eclairs/roll closer to the
+   frame bottom so there's no empty lit gap beneath the stand */
+@media (min-width: 981px) {
+  .product-spotlight { padding-bottom: 30px; }
+  .product-spotlight::after { bottom: 22px; }
 }
