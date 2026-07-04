@@ -1133,12 +1133,13 @@ p {
   transform: translateY(6px);
   /* keep the eclairs smaller and elegant, sitting back on the stage */
   scale: 0.8;
+  /* single drop-shadow instead of two — much cheaper to repaint while the
+     eclairs levitate (was a big part of the scroll lag) */
   filter:
-    drop-shadow(0 42px 40px rgba(0,0,0,.55))
-    drop-shadow(0 0 50px rgba(255,182,92,.34))
-    saturate(1.08)
-    contrast(1.05)
-    brightness(1.04);
+    drop-shadow(0 26px 24px rgba(0,0,0,.5))
+    saturate(1.07)
+    contrast(1.04)
+    brightness(1.03);
   animation: eclairLevitate 6.5s ease-in-out infinite;
 }
 
@@ -2621,13 +2622,13 @@ body::before {
   animation: eyebrowSheen 3.8s linear infinite;
 }
 
-/* 3) spotlights dim while an eclair is moving and brighten only when it
-   settles in the centre — a curtain-reveal, driven by JS var --spot */
+/* 3) beams kept static (the old per-scroll brightness dimming caused the
+   heavy repaint / scroll lag, so it's removed) */
 .product-spotlight::before {
-  filter: blur(.35px) brightness(calc(.3 + .7 * var(--spot, 1)));
+  filter: blur(.35px);
 }
 .product-spotlight .spotlight-beam {
-  filter: blur(8px) brightness(calc(.28 + .72 * var(--spot, 1)));
+  filter: blur(8px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2720,7 +2721,7 @@ body::before { display: none; }
   align-items: flex-end;
   justify-content: center;
   gap: 0;
-  width: min(43vw, 738px); /* −10% so they don't spill off the podium */
+  width: min(41vw, 700px); /* sit within the visible podium disc */
 }
 /* eclairs sitting almost shoulder-to-shoulder; the overlap cancels the
    transparent margins baked into the PNGs so they read as nearly touching */
@@ -2731,9 +2732,10 @@ body::before { display: none; }
 .eclair-pedestal.boutique-render.trio img:not(:first-child) {
   margin-left: -16%; /* almost glued together */
 }
-/* charcoal PNGs carry more empty space + a tilt, so they need extra pull-in */
+/* charcoal PNGs carry more empty space; pull in a bit — but not so much that
+   only the glossy tops of the back two show (that made them look lighter) */
 .eclair-pedestal.boutique-render.trio img[src*="charcoal"]:not(:first-child) {
-  margin-left: -27%;
+  margin-left: -21%;
 }
 /* gentle staggered levitation so the three don't bob in lockstep */
 .eclair-pedestal.boutique-render.trio img:nth-child(2) { animation-delay: -2.1s; }
@@ -2756,11 +2758,11 @@ body::before { display: none; }
 /* --- trio eclair sizing: keep every flavour the same appetising size,
    with charcoal & dark-chocolate a touch bigger/expressive --- */
 .eclair-pedestal.boutique-render.charcoal-render.trio {
-  width: min(43vw, 738px); /* match the others, −10% */
+  width: min(41vw, 700px); /* match the others */
 }
 .eclair-pedestal.boutique-render.trio img[src*="charcoal"] {
   width: 40%;
-  scale: 1.08;      /* bring it a touch closer/forward */
+  scale: 1.02;      /* close to the others */
   rotate: 22deg;    /* charcoal PNG has a steep baked-in tilt; more CSS
                        rotation actually lays it flatter */
   translate: 0 16px; /* nudge down closer to the podium */
@@ -2834,4 +2836,16 @@ body.menu-open .site-header.header-hidden {
 @media (min-width: 981px) {
   .product-spotlight { padding-bottom: 30px; }
   .product-spotlight::after { bottom: 22px; }
+}
+
+/* PERF — on desktop only the centred carousel slide keeps its heavy
+   levitate/beam animations running; the off-screen ones are paused */
+@media (min-width: 981px) {
+  .product-slide:not(.is-active) .eclair-pedestal.boutique-render img,
+  .product-slide:not(.is-active) .spotlight-beam {
+    animation-play-state: paused;
+  }
+  .product-slide:not(.is-active) .product-spotlight::before {
+    animation-play-state: paused;
+  }
 }

@@ -331,7 +331,6 @@ function updateProductStage() {
     productTrack.style.transform = "translate3d(0, 0, 0)";
     if (productProgress) productProgress.style.width = "100%";
     if (productCount) productCount.textContent = `01 / ${String(slides.length).padStart(2, "0")}`;
-    productStage.style.setProperty("--spot", "1");
     return;
   }
 
@@ -341,16 +340,17 @@ function updateProductStage() {
   const maxTranslate = Math.max(productTrack.scrollWidth - viewportWidth, 0);
   productTrack.style.transform = `translate3d(${-maxTranslate * rawProgress}px, 0, 0)`;
 
+  // only touch the DOM text/width when the active slide actually changes
   const activeIndex = Math.min(slides.length - 1, Math.floor(rawProgress * slides.length));
-  if (productProgress) productProgress.style.width = `${rawProgress * 100}%`;
-  if (productCount) productCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
-
-  // "curtain reveal": beams dim between slides, brighten as one centres.
-  // frac = distance to the nearest slide-centre (0 = centred, .5 = mid-move)
-  const pos = rawProgress * Math.max(slides.length - 1, 1);
-  const frac = Math.abs(pos - Math.round(pos));
-  const settle = Math.max(0, Math.min(1, 1 - frac / 0.3));
-  productStage.style.setProperty("--spot", settle.toFixed(3));
+  if (activeIndex !== updateProductStage._last) {
+    updateProductStage._last = activeIndex;
+    if (productProgress) productProgress.style.width = `${(activeIndex / Math.max(slides.length - 1, 1)) * 100}%`;
+    if (productCount) productCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+    // let only the on-screen slide run its (heavy) levitate/beam animations
+    for (var i = 0; i < slides.length; i++) {
+      slides[i].classList.toggle("is-active", i === activeIndex);
+    }
+  }
 }
 
 window.addEventListener("scroll", updateProductStage, { passive: true });
