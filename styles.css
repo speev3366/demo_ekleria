@@ -2795,7 +2795,7 @@ body::before { display: none; }
      phone lift it, enlarge it, and turn it a touch toward the viewer */
   .eclair-pedestal.boutique-render.trio img[src*="charcoal"] {
     rotate: 14deg;
-    scale: 1.25;
+    scale: 1.44;
     translate: 0 -6px;
   }
   .eclair-pedestal.boutique-render.trio img:not(:first-child) {
@@ -2876,4 +2876,21 @@ body.menu-open .site-header.header-hidden {
   .video-section {
     grid-template-columns: minmax(0, 1fr) minmax(320px, .78fr);
   }
+}
+
+/* mobile: the roll's stage read smaller than the eclair stages — enlarge ~10% */
+@media (max-width: 980px) {
+  .product-slide:has(.roll-render) .product-spotlight::after {
+    width: min(62vw, 396px);
+    height: 108px;
+  }
+}
+
+/* desktop: let the "who we are" portrait fill the text column's height so its
+   bottom stays level with the text at any width (image barely crops — its
+   natural ratio ≈ the display ratio) */
+@media (min-width: 981px) {
+  .story { align-items: stretch; }
+  .story .portrait { align-self: stretch; }
+  .story .portrait img { height: 100%; aspect-ratio: auto; }
 }
