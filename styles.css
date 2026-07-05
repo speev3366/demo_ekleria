@@ -2721,7 +2721,7 @@ body::before { display: none; }
   align-items: flex-end;
   justify-content: center;
   gap: 0;
-  width: min(37vw, 630px); /* sit comfortably within the visible podium disc */
+  width: min(34vw, 578px); /* smaller + set a touch further back on the disc */
 }
 /* eclairs sitting almost shoulder-to-shoulder; the overlap cancels the
    transparent margins baked into the PNGs so they read as nearly touching */
@@ -2758,7 +2758,7 @@ body::before { display: none; }
 /* --- trio eclair sizing: keep every flavour the same appetising size,
    with charcoal & dark-chocolate a touch bigger/expressive --- */
 .eclair-pedestal.boutique-render.charcoal-render.trio {
-  width: min(37vw, 630px); /* match the others */
+  width: min(34vw, 578px); /* match the others */
 }
 .eclair-pedestal.boutique-render.trio img[src*="charcoal"] {
   width: 40%;
@@ -2784,12 +2784,16 @@ body::before { display: none; }
     padding: 24px 0 22px;
   }
   .eclair-pedestal.boutique-render.trio {
-    width: min(66vw, 300px); /* eclairs a touch bigger on phone */
-    transform: translateY(-12px); /* sit closer down on the podium */
+    width: min(70vw, 320px); /* bigger on phone (was small on the big stage) */
+    transform: translateY(2px); /* seat them right on the podium */
   }
   .eclair-pedestal.boutique-render.trio img {
     width: 40%;
-    max-height: 124px;
+    max-height: 132px;
+  }
+  /* on phone turn the charcoal eclairs a touch toward the viewer (left) */
+  .eclair-pedestal.boutique-render.trio img[src*="charcoal"] {
+    rotate: 14deg;
   }
   .eclair-pedestal.boutique-render.trio img:not(:first-child) {
     margin-left: -13%; /* closer together */
@@ -2805,8 +2809,8 @@ body::before { display: none; }
   .product-spotlight:has(.trio)::before,
   .product-spotlight:has(.roll-render)::before {
     inset: -8px -1% 0;
-    -webkit-mask: linear-gradient(180deg, #000 0 58%, transparent 86%);
-            mask: linear-gradient(180deg, #000 0 58%, transparent 86%);
+    -webkit-mask: linear-gradient(180deg, #000 0 82%, transparent 96%);
+            mask: linear-gradient(180deg, #000 0 82%, transparent 96%);
     background:
       radial-gradient(circle at 30% -2%, rgba(255,245,218,.82) 0 2.2%, rgba(231,176,105,.38) 4.4%, transparent 7.4%),
       radial-gradient(circle at 50% -2%, rgba(255,245,218,.88) 0 2.3%, rgba(231,176,105,.42) 4.6%, transparent 7.8%),
@@ -2850,5 +2854,23 @@ body.menu-open .site-header.header-hidden {
   }
   .product-slide:not(.is-active) .product-spotlight::before {
     animation-play-state: paused;
+  }
+}
+
+/* desktop: set only the first three flavours (caramel, pistachio, white)
+   ~5% further back on the podium */
+@media (min-width: 981px) {
+  .eclair-pedestal.boutique-render.trio img[src*="product-alpha-caramel"],
+  .eclair-pedestal.boutique-render.trio img[src*="product-alpha-pistachio"],
+  .eclair-pedestal.boutique-render.trio img[src*="product-alpha-white-chocolate"] {
+    scale: 0.95;
+  }
+}
+
+/* desktop: align the atelier video column with the "who we are" portrait
+   column above it so the video sits centred under the photo */
+@media (min-width: 981px) {
+  .video-section {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, .78fr);
   }
 }
