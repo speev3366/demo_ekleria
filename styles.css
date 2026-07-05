@@ -2785,15 +2785,18 @@ body::before { display: none; }
   }
   .eclair-pedestal.boutique-render.trio {
     width: min(70vw, 320px); /* bigger on phone (was small on the big stage) */
-    transform: translateY(2px); /* seat them right on the podium */
+    transform: translateY(-10px); /* lift them up so they rest on top of the podium */
   }
   .eclair-pedestal.boutique-render.trio img {
     width: 40%;
     max-height: 132px;
   }
-  /* on phone turn the charcoal eclairs a touch toward the viewer (left) */
+  /* charcoal on phone: it inherits a downward nudge + renders small, so on
+     phone lift it, enlarge it, and turn it a touch toward the viewer */
   .eclair-pedestal.boutique-render.trio img[src*="charcoal"] {
     rotate: 14deg;
+    scale: 1.25;
+    translate: 0 -6px;
   }
   .eclair-pedestal.boutique-render.trio img:not(:first-child) {
     margin-left: -13%; /* closer together */
