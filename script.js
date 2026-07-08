@@ -464,6 +464,12 @@ document.querySelectorAll("[data-contact-cta]").forEach((btn) => {
 });
 
 // Atelier: single player that plays the clips one after another (0 → 1 → 2 → 3 → loop).
+document.querySelectorAll(".visit-review-qr").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+});
+
 const atelierPlayer = document.querySelector("[data-atelier-player]");
 const atelierPlaylist = [
   "assets/videos/aterlier-0.mp4",
