@@ -2919,22 +2919,25 @@ body.menu-open .site-header.header-hidden {
 
 /* Review card polish: keep the generated QR artwork fully visible and readable. */
 .visit-review {
-  padding: 14px;
+  padding: 0;
   background: color-mix(in srgb, var(--paper) 92%, var(--cocoa) 8%);
   border-color: rgba(35,23,17,.14);
 }
 
 .visit-review-qr {
-  overflow: visible;
-  border-radius: 24px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  border-radius: inherit;
 }
 
 .visit-review-qr:hover {
-  transform: translateY(-2px);
+  transform: none;
 }
 
 .visit-review-qr img {
   width: 100%;
-  height: auto;
-  border-radius: 22px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  animation: none;
 }
