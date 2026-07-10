@@ -1949,9 +1949,36 @@ html.js-reveal [data-reveal].is-visible {
   .brand span { font-size: 1.2rem; }
   .brand img { width: 40px; height: 40px; }
 
-  /* the source video is split 50/50 (blurred left / clean right):
-     on phones show only the clean right half */
-  .hero-video { object-position: 80% 50%; }
+  /* The source video is split 50/50 (blurred left / clean right).
+     On phones: show the clean right half at its NATURAL scale — a sharp
+     cinematic band across the middle, softly masked into the noir hero,
+     instead of a heavily magnified blurry crop. */
+  .hero-video,
+  .hero-video-bg {
+    inset: auto;
+    left: -100%;
+    top: 50%;
+    translate: 0 -50%;
+    width: 200%;
+    max-width: none;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: fill;
+    object-position: center;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16%, #000 84%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 16%, #000 84%, transparent 100%);
+  }
+
+  /* tighter hero rhythm so both CTA buttons are visible on first load */
+  .hero-content {
+    padding-top: calc(var(--header-h) + 14px);
+    padding-bottom: 56px;
+  }
+  .hero-content .eyebrow { margin-bottom: 10px; }
+  .hero h1 { font-size: clamp(2.2rem, 8.6vw, 3rem); margin: 4px 0 14px; }
+  .hero-copy { margin-bottom: 18px; }
+  .hero-services { margin-bottom: 22px; padding: 10px 18px; }
+  .hero-content::after { height: 36px; margin-top: 20px; }
 
   /* BG/EN move into the slide-in menu; slightly narrower panel */
   .header-actions .lang { display: none; }
