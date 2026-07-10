@@ -514,6 +514,19 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   font-size: 12px;
 }
 
+/* language switch lives inside the slide-in menu on phones */
+.mobile-nav-langs {
+  display: none;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.mobile-nav-langs .lang {
+  flex: 1;
+  padding: 13px 0;
+  font-size: 12px;
+}
+
 /* ---------- hero ---------- */
 
 .hero {
@@ -1919,6 +1932,15 @@ html.js-reveal [data-reveal].is-visible {
 
   .brand span { font-size: 1.2rem; }
   .brand img { width: 40px; height: 40px; }
+
+  /* the source video is split 50/50 (blurred left / clean right):
+     on phones show only the clean right half */
+  .hero-video { object-position: 80% 50%; }
+
+  /* BG/EN move into the slide-in menu; slightly narrower panel */
+  .header-actions .lang { display: none; }
+  .mobile-nav-langs { display: flex; }
+  .mobile-nav { width: min(82vw, 368px); }
 
   .hero-copy { font-size: .98rem; }
   .hero-services { max-width: 92vw; }
