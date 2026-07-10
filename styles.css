@@ -1887,11 +1887,15 @@ html.js-reveal [data-reveal].is-visible {
   /* the ride is vertical here, so the desktop progress counter is meaningless */
   .product-stage-head { display: none; }
 
+  /* phones: drop the small "ПРОДУКТ 01" label, the etched numeral takes its
+     place at the top-left, right above the product name */
+  .product-slide-copy > span { display: none; }
+
   .product-slide::before {
-    font-size: clamp(110px, 26vw, 170px);
-    left: auto;
-    right: 4px;
-    top: -44px; /* lifted clear of the medallion */
+    font-size: clamp(96px, 23vw, 150px);
+    left: 6px;
+    right: auto;
+    top: -26px;
     bottom: auto;
   }
 
@@ -1955,25 +1959,25 @@ html.js-reveal [data-reveal].is-visible {
      instead of a heavily magnified blurry crop. */
   .hero-video,
   .hero-video-bg {
-    inset: auto;
-    left: -123%;
-    top: 50%;
-    translate: 0 -50%;
-    width: 230%;
+    inset: 122px 0 0 0;
+    translate: none;
+    width: 100%;
     max-width: none;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: fill;
-    object-position: center;
-    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
-    mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+    height: calc(100% - 122px);
+    aspect-ratio: auto;
+    object-fit: cover;
+    object-position: 86% 50%; /* stay inside the clean right half */
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 11%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 11%);
+  }
+
+  /* content rides a touch lower so the film fills the bottom of the screen */
+  .hero-content {
+    padding-top: calc(var(--header-h) + 46px);
+    padding-bottom: 38px;
   }
 
   /* tighter hero rhythm so both CTA buttons are visible on first load */
-  .hero-content {
-    padding-top: calc(var(--header-h) + 14px);
-    padding-bottom: 56px;
-  }
   .hero-content .eyebrow { margin-bottom: 10px; }
   .hero h1 { font-size: clamp(2.1rem, 8.2vw, 2.8rem); margin: 4px 0 12px; }
   .hero-copy { font-size: .92rem; line-height: 1.6; margin-bottom: 16px; }
@@ -2023,6 +2027,15 @@ html.js-reveal [data-reveal].is-visible {
   .atelier-pp { right: 12px; bottom: 12px; }
   .atelier-prev { left: 10px; }
   .atelier-next { right: 10px; }
+
+  /* atelier clips are shot vertical — give the player ~25% more height */
+  .video-player video { aspect-ratio: 10 / 7; }
+  .video-section { padding-bottom: 30px; }
+  .selection { padding-top: 60px; }
+
+  /* selection cards: show the whole photo instead of a hard crop */
+  .product img,
+  .product.feature img { height: auto; }
 }
 
 /* very narrow phones: keep the rotator on one line too */
