@@ -189,22 +189,24 @@ h2 {
   isolation: isolate;
 }
 
-.button.primary {
+.button.primary,
+.button.secondary {
   color: var(--gold-3);
   background:
-    radial-gradient(130% 210% at 50% 115%, rgba(232, 181, 99, .34), rgba(232, 181, 99, .08) 55%, rgba(232, 181, 99, 0) 82%),
-    rgba(18, 11, 6, .52);
-  border: 1px solid rgba(232, 181, 99, .5);
+    radial-gradient(135% 220% at 50% 118%, rgba(232, 181, 99, .5), rgba(232, 181, 99, .12) 55%, rgba(232, 181, 99, 0) 84%),
+    rgba(18, 11, 6, .55);
+  border: 1px solid rgba(232, 181, 99, .6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  text-shadow: 0 0 16px rgba(232, 181, 99, .4);
+  text-shadow: 0 0 16px rgba(232, 181, 99, .5);
   box-shadow:
-    0 0 38px rgba(232, 181, 99, .24),
+    0 0 46px rgba(232, 181, 99, .32),
     0 12px 34px rgba(0, 0, 0, .35),
-    inset 0 1px 0 rgba(246, 234, 210, .14);
+    inset 0 1px 0 rgba(246, 234, 210, .16);
 }
 
-.button.primary::after {
+.button.primary::after,
+.button.secondary::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -214,28 +216,16 @@ h2 {
   transition: transform .8s var(--ease);
 }
 
-.button.primary:hover::after { transform: translateX(130%); }
-.button.primary:hover {
-  border-color: rgba(232, 181, 99, .85);
-  box-shadow:
-    0 0 60px rgba(232, 181, 99, .42),
-    0 14px 44px rgba(0, 0, 0, .4),
-    inset 0 1px 0 rgba(246, 234, 210, .18);
-  translate: 0 -2px;
-}
+.button.primary:hover::after,
+.button.secondary:hover::after { transform: translateX(130%); }
 
-.button.secondary {
-  color: var(--gold-3);
-  background: rgba(246, 234, 210, .04);
-  border: 1px solid var(--hairline-gold);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
+.button.primary:hover,
 .button.secondary:hover {
-  border-color: rgba(232, 181, 99, .65);
-  background: rgba(232, 181, 99, .1);
-  box-shadow: var(--glow-gold);
+  border-color: rgba(232, 181, 99, .9);
+  box-shadow:
+    0 0 66px rgba(232, 181, 99, .5),
+    0 14px 44px rgba(0, 0, 0, .4),
+    inset 0 1px 0 rgba(246, 234, 210, .2);
   translate: 0 -2px;
 }
 
@@ -445,12 +435,12 @@ h2 {
 
 .lang.active {
   background:
-    radial-gradient(140% 230% at 50% 125%, rgba(232, 181, 99, .38), rgba(232, 181, 99, .06) 60%, transparent 85%),
-    rgba(18, 11, 6, .5);
-  border-color: rgba(232, 181, 99, .65);
+    radial-gradient(140% 230% at 50% 125%, rgba(232, 181, 99, .5), rgba(232, 181, 99, .1) 60%, transparent 85%),
+    rgba(18, 11, 6, .55);
+  border-color: rgba(232, 181, 99, .75);
   color: var(--gold-3);
-  text-shadow: 0 0 12px rgba(232, 181, 99, .45);
-  box-shadow: 0 0 22px rgba(232, 181, 99, .3), inset 0 1px 0 rgba(246, 234, 210, .12);
+  text-shadow: 0 0 12px rgba(232, 181, 99, .55);
+  box-shadow: 0 0 30px rgba(232, 181, 99, .42), inset 0 1px 0 rgba(246, 234, 210, .14);
 }
 
 .menu-toggle {
@@ -492,7 +482,8 @@ body.menu-open .menu-toggle span:nth-child(3) { transform: translateY(-8px) rota
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: calc(var(--header-h) + 40px) 36px 40px;
+  padding: calc(var(--header-h) + 14px) 34px calc(24px + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
   background:
     radial-gradient(70% 36% at 100% 0%, rgba(232, 181, 99, .18), transparent 65%),
     radial-gradient(80% 44% at 0% 100%, rgba(138, 90, 40, .16), transparent 65%),
@@ -508,9 +499,9 @@ body.menu-open .menu-toggle span:nth-child(3) { transform: translateY(-8px) rota
 body.menu-open .mobile-nav { transform: translateX(0); }
 
 .mobile-nav > a {
-  padding: 16px 4px;
+  padding: 13px 4px;
   font-family: var(--serif);
-  font-size: 1.6rem;
+  font-size: 1.55rem;
   font-weight: 600;
   color: var(--cream);
   border-bottom: 1px solid rgba(246, 234, 210, .08);
@@ -520,7 +511,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .mobile-nav > a:hover { color: var(--gold-3); padding-left: 12px; }
 
 .mobile-nav .mobile-nav-cta {
-  margin-top: 28px;
+  margin-top: 20px;
   border-bottom: none;
   font-family: var(--sans);
   font-size: 12px;
@@ -530,7 +521,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .mobile-nav-langs {
   display: none;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .mobile-nav-langs .lang {
