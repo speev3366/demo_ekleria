@@ -692,6 +692,8 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   font-weight: 600;
   line-height: 1.5;
   letter-spacing: .002em;
+  overflow-wrap: break-word;
+  word-break: normal;
   background: linear-gradient(100deg,
     var(--gold-3) 0%, var(--gold-2) 42%, #fdf3dd 52%, var(--gold-2) 64%, var(--gold-3) 100%);
   background-size: 220% 100%;
@@ -703,14 +705,14 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   animation: goldSheen 9s linear infinite;
 }
 
-/* "written-on" reveal: every glyph is already in place (no reflow / no jitter),
-   they just fade in one after another like the line is being written */
-.hero-copy .tw-char {
+/* "written-on" reveal: words are laid out normally (real spaces between them so the
+   line wraps on every browser), then fade in one after another as if written */
+.hero-copy .tw-word {
   opacity: 0;
-  transition: opacity .22s ease;
+  transition: opacity .32s ease;
 }
-.hero-copy.is-writing .tw-char.on,
-.hero-copy .tw-char.on { opacity: 1; }
+.hero-copy.is-writing .tw-word.on,
+.hero-copy .tw-word.on { opacity: 1; }
 
 /* thin gold caret that rides along while the line writes itself */
 .hero-copy .tw-caret {
@@ -726,9 +728,15 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 
 @keyframes twCaretBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 
-/* wrapper is invisible to layout by default (mobile keeps the original flow);
-   desktop turns it into a column whose width is driven by the pill above */
-.hero-cta { display: contents; }
+/* mobile: a real, viewport-constrained column so the pill + buttons can never
+   spill past the screen edges; desktop overrides width to match the pill (below) */
+.hero-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+}
 
 .hero-services {
   display: inline-flex;
@@ -1959,8 +1967,14 @@ html.js-reveal [data-reveal].is-visible {
   .nav { display: none; }
   .menu-toggle { display: flex; }
 
+  /* never let hero content exceed the screen — a stray wide line can't push the
+     buttons off-frame (root cause of the mobile overflow) */
+  .hero-content { max-width: 100%; overflow: hidden; }
+  .hero-cta { max-width: 100%; }
+  .hero-copy { max-width: 100%; }
+
   .hero h1 { font-size: clamp(2.6rem, 10vw, 4rem); }
-  .hero-actions { width: 100%; }
+  .hero-actions { width: 100%; max-width: 100%; }
   .hero-actions .button { flex: 1 1 auto; min-width: 210px; }
 
   .story {
@@ -2266,7 +2280,7 @@ html.js-reveal [data-reveal].is-visible {
     animation: none;
   }
 
-  .hero-copy .tw-char { opacity: 1; transition: none; }
+  .hero-copy .tw-word { opacity: 1; transition: none; }
   .hero-copy .tw-caret { display: none; }
 
   html.js-reveal [data-reveal] {

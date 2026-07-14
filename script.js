@@ -227,14 +227,18 @@ function writeOnHeroCopy(text) {
   el.setAttribute("aria-label", text); // screen readers get the whole line at once
   el.classList.add("is-writing");
 
-  const step = 45; // ms per glyph — slow, deliberate writing (~6s for the full sentence)
-  const spans = Array.from(text).map((ch) => {
+  // Split into WORDS with real space text-nodes between them, so the line wraps
+  // naturally on every browser (per-character spans broke wrapping in Safari).
+  const step = 185; // ms per word — slow, deliberate, few words at a time
+  const words = text.split(" ");
+  const spans = [];
+  words.forEach((word, i) => {
     const s = document.createElement("span");
-    s.className = "tw-char";
-    s.textContent = ch;
-    if (ch === " ") s.style.whiteSpace = "pre";
+    s.className = "tw-word";
+    s.textContent = word;
     el.appendChild(s);
-    return s;
+    spans.push(s);
+    if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
   });
 
   const caret = document.createElement("span");
@@ -252,7 +256,7 @@ function writeOnHeroCopy(text) {
   heroCopyTimers.push(setTimeout(() => {
     el.classList.remove("is-writing");
     caret.classList.add("done");
-  }, spans.length * step + 400));
+  }, spans.length * step + 500));
 }
 
 function setLanguage(language) {
