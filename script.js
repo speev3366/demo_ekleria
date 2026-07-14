@@ -8,7 +8,7 @@ const translations = {
     "nav.contacts": "Контакти",
     "hero.eyebrow": "Специализирана пекарна за Еклери",
     "hero.title": "Еклери по оригинална рецепта.",
-    "hero.copy": "Място, в което фокусът е един: различни видове еклери, приготвени на място с истински съставки, неустоим крем и фина глазура.",
+    "hero.copy": "Място, в което фокусът е един: различни видове еклери по оригинална рецепта, приготвени на място с истински съставки, неустоим крем и фина глазура.",
     "hero.primary": "Посетете ни",
     "hero.secondary": "Запознайте се с нас",
     "hero.panelLabel": "Отворено",
@@ -110,7 +110,7 @@ const translations = {
     "nav.contacts": "Contacts",
     "hero.eyebrow": "Specialized eclair bakery",
     "hero.title": "Original-recipe eclairs.",
-    "hero.copy": "A place with one clear focus: different kinds of eclairs prepared on site with real ingredients, irresistible cream and fine glaze.",
+    "hero.copy": "A place with one clear focus: different kinds of original-recipe eclairs, prepared on site with real ingredients, irresistible cream and fine glaze.",
     "hero.primary": "Visit us",
     "hero.secondary": "Meet the bakery",
     "hero.panelLabel": "Open",
@@ -208,6 +208,53 @@ const translations = {
 // Default to Bulgarian unless the visitor has explicitly chosen a language before.
 let currentLanguage = localStorage.getItem("ekleria-language") || "bg";
 
+// --- hero intro line: "written-on" reveal (glyph by glyph, like it's being written) ---
+const heroCopyEl = document.querySelector(".hero-copy");
+const reduceMotionMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
+let heroCopyTimers = [];
+
+function writeOnHeroCopy(text) {
+  const el = heroCopyEl;
+  if (!el || !text) return;
+
+  heroCopyTimers.forEach(clearTimeout);
+  heroCopyTimers = [];
+
+  // reduced motion (or no support): just show the full line
+  if (reduceMotionMQ.matches) { el.textContent = text; return; }
+
+  el.textContent = "";
+  el.setAttribute("aria-label", text); // screen readers get the whole line at once
+  el.classList.add("is-writing");
+
+  const step = 45; // ms per glyph — slow, deliberate writing (~6s for the full sentence)
+  const spans = Array.from(text).map((ch) => {
+    const s = document.createElement("span");
+    s.className = "tw-char";
+    s.textContent = ch;
+    if (ch === " ") s.style.whiteSpace = "pre";
+    el.appendChild(s);
+    return s;
+  });
+
+  const caret = document.createElement("span");
+  caret.className = "tw-caret";
+  caret.setAttribute("aria-hidden", "true");
+  caret.textContent = "|";
+  el.insertBefore(caret, el.firstChild); // caret starts at the very beginning
+
+  spans.forEach((s, i) => {
+    heroCopyTimers.push(setTimeout(() => {
+      s.classList.add("on");
+      s.insertAdjacentElement("afterend", caret); // caret rides just behind the pen
+    }, i * step));
+  });
+  heroCopyTimers.push(setTimeout(() => {
+    el.classList.remove("is-writing");
+    caret.classList.add("done");
+  }, spans.length * step + 400));
+}
+
 function setLanguage(language) {
   currentLanguage = language;
   document.documentElement.lang = language;
@@ -218,12 +265,16 @@ function setLanguage(language) {
     if (value) element.textContent = value;
   });
 
+  // replay the writing effect for the (possibly just-swapped) hero line
+  writeOnHeroCopy(translations[language]["hero.copy"]);
+
   document.querySelectorAll(".lang").forEach((button) => {
     const isActive = button.dataset.lang === language;
     button.classList.toggle("active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
   });
 
+  if (typeof buildServiceSizers === "function") buildServiceSizers();
   if (typeof renderService === "function") renderService(false);
 }
 
@@ -267,40 +318,89 @@ const heroVideos = {
   main: document.querySelector("[data-hero-video='main']")
 };
 
-const heroClips = [
-  { src: "assets/videos/ekleria-video-download.mp4", start: 0, duration: 12000 }
-];
+// Responsive hero clip + resilient autoplay.
+//  - phones load the vertical cut, desktops the wide one (only the matching clip is fetched)
+//  - keeps trying to play through the first-load race, tab switches and
+//    Low Power Mode / battery-saver (which pauses autoplay). It never gives up:
+//    it retries on every readiness event, on visibility, and on the first user gesture.
+const heroSources = {
+  desktop: "assets/videos/home_video_desktop.mp4",
+  mobile: "assets/videos/home_video_mobile.mp4"
+};
 
-let heroClipIndex = 0;
+const heroMobileMQ = window.matchMedia("(max-width: 760px)");
+const wantedHeroSrc = () => (heroMobileMQ.matches ? heroSources.mobile : heroSources.desktop);
 
-function setHeroClip(index) {
-  const clip = heroClips[index % heroClips.length];
-  const source = clip.start ? `${clip.src}#t=${clip.start}` : clip.src;
+function kickHeroVideo(video) {
+  if (!video) return;
+  // re-assert the flags every time — Low Power Mode can clear the effective muted state
+  video.muted = true;
+  video.defaultMuted = true;
+  video.setAttribute("muted", "");
+  video.playsInline = true;
+  video.setAttribute("playsinline", "");
+  video.loop = true;
+  const p = video.play();
+  if (p && typeof p.catch === "function") p.catch(() => {});
+}
 
+function applyHeroSource() {
+  const src = wantedHeroSrc();
   Object.values(heroVideos).forEach((video) => {
     if (!video) return;
-    const playHeroVideo = () => {
-      video.muted = true;
-      video.loop = true;
-      video.autoplay = true;
-      video.play().catch(() => {});
-    };
-
-    video.src = source;
-    video.addEventListener("canplay", playHeroVideo, { once: true });
-    video.addEventListener("loadedmetadata", playHeroVideo, { once: true });
-    video.load();
-    playHeroVideo();
+    const cur = video.currentSrc || video.getAttribute("src") || "";
+    if (!cur.endsWith(src)) {
+      video.setAttribute("src", src);
+      video.load();
+    }
+    kickHeroVideo(video);
   });
 }
 
 if (heroVideos.main) {
-  setHeroClip(heroClipIndex);
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
-      Object.values(heroVideos).forEach((video) => video?.play().catch(() => {}));
+  const mainVideo = heroVideos.main;
+
+  applyHeroSource();
+
+  // retry playback on every readiness milestone — this is what fixes the
+  // "black frame until you refresh" first-load race.
+  ["loadedmetadata", "loadeddata", "canplay", "canplaythrough", "stalled", "suspend"].forEach((ev) =>
+    mainVideo.addEventListener(ev, () => kickHeroVideo(mainVideo))
+  );
+
+  // if the system pauses it (Low Power Mode / under-20% battery saver), nudge it back
+  mainVideo.addEventListener("pause", () => {
+    if (!document.hidden && !mainVideo.ended) {
+      setTimeout(() => { if (!document.hidden && mainVideo.paused) kickHeroVideo(mainVideo); }, 250);
     }
   });
+
+  // resume when the tab becomes visible again
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) Object.values(heroVideos).forEach(kickHeroVideo);
+  });
+
+  // battery-saver / autoplay-blocked browsers only permit playback after a user gesture —
+  // resume on the very first interaction of any kind
+  const resumeOnGesture = () => Object.values(heroVideos).forEach(kickHeroVideo);
+  ["pointerdown", "touchstart", "click", "keydown", "scroll"].forEach((ev) =>
+    window.addEventListener(ev, resumeOnGesture, { passive: true })
+  );
+
+  // keep the two device cuts in sync when crossing the phone/desktop breakpoint
+  if (heroMobileMQ.addEventListener) heroMobileMQ.addEventListener("change", applyHeroSource);
+  else if (heroMobileMQ.addListener) heroMobileMQ.addListener(applyHeroSource);
+
+  // one more attempt after full load
+  window.addEventListener("load", () => kickHeroVideo(mainVideo));
+
+  // short watchdog: if it still hasn't started shortly after load, keep trying for a few seconds
+  let kicks = 0;
+  const heroWatchdog = setInterval(() => {
+    kicks += 1;
+    if (mainVideo.paused && !document.hidden) kickHeroVideo(mainVideo);
+    if ((!mainVideo.paused && mainVideo.currentTime > 0) || kicks > 14) clearInterval(heroWatchdog);
+  }, 700);
 }
 
 // Play each video only while it is on screen. This keeps the number of
@@ -334,7 +434,7 @@ let productTicking = false;
 function refreshProductStageMetrics() {
   if (!productTrack) return;
   productSlides = Array.from(productTrack.children);
-  productMaxTranslate = Math.max(productTrack.scrollWidth - window.innerWidth, 0);
+  productMaxTranslate = Math.max(productTrack.scrollWidth - productTrack.clientWidth, 0);
 }
 
 function updateProductStage() {
@@ -422,10 +522,25 @@ const heroServices = {
 const servicesTrack = document.querySelector("[data-services-rotator]");
 let servicesIndex = 0;
 
+// Hidden copies of every phrase keep the pill at the width of the longest one,
+// so it never changes size while the texts rotate.
+function buildServiceSizers() {
+  if (!servicesTrack) return;
+  servicesTrack.querySelectorAll(".hero-services-sizer").forEach((el) => el.remove());
+  const list = heroServices[currentLanguage] || heroServices.bg;
+  list.forEach((phrase) => {
+    const sizer = document.createElement("span");
+    sizer.className = "hero-services-text hero-services-sizer";
+    sizer.setAttribute("aria-hidden", "true");
+    sizer.textContent = phrase;
+    servicesTrack.appendChild(sizer);
+  });
+}
+
 function renderService(animate) {
   if (!servicesTrack) return;
   const list = heroServices[currentLanguage] || heroServices.bg;
-  const text = servicesTrack.querySelector(".hero-services-text");
+  const text = servicesTrack.querySelector(".hero-services-text:not(.hero-services-sizer)");
   if (!text) return;
   const next = list[servicesIndex % list.length];
   if (!animate) {
@@ -449,6 +564,7 @@ if (servicesTrack) {
 }
 
 setLanguage(currentLanguage);
+buildServiceSizers();
 renderService(false);
 
 // "Посетете ни" scrolls to the contacts and briefly highlights the phone.

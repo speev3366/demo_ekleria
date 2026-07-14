@@ -33,7 +33,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=gold-noir-14">
+    <link rel="stylesheet" href="styles.css?v=gold-noir-26">
 
     <script type="application/ld+json">
     {
@@ -75,6 +75,7 @@
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
+    <div class="edge-stripes" aria-hidden="true"></div>
     <header class="site-header">
       <a class="brand" href="#top" aria-label="Еклерия">
         <img src="assets/images/optimized/logo-wall-header.webp" alt="Лого на Пекарна Еклерия" fetchpriority="high" decoding="async">
@@ -133,21 +134,23 @@
     <main id="top">
       <section class="hero">
         <img class="hero-video-bg" src="assets/images/optimized/hero-poster-live.webp" alt="" aria-hidden="true" fetchpriority="high" decoding="async">
-        <video class="hero-video" data-hero-video="main" src="assets/videos/ekleria-video-download.mp4" autoplay muted loop playsinline poster="assets/images/optimized/hero-poster-live.webp"></video>
+        <video class="hero-video" data-hero-video="main" src="assets/videos/home_video_desktop.mp4" autoplay muted loop playsinline preload="auto" poster="assets/images/optimized/hero-poster-live.webp"></video>
         <div class="hero-shade"></div>
         <div class="hero-content">
           <p class="eyebrow" data-i18n="hero.eyebrow">Специализирана пекарна за Еклери</p>
           <h1 data-i18n="hero.title">Еклери по оригинална рецепта.</h1>
-          <p class="hero-copy" data-i18n="hero.copy">Място, в което фокусът е един: различни видове еклери, приготвени на място с истински съставки, неустоим крем и фина глазура.</p>
-          <div class="hero-services" aria-label="Нашите услуги">
-            <span class="hero-services-dot" aria-hidden="true"></span>
-            <span class="hero-services-track" data-services-rotator>
-              <span class="hero-services-text">Поръчайте еклери за дома</span>
-            </span>
-          </div>
-          <div class="hero-actions">
-            <a class="button primary" href="#visit" data-contact-cta data-i18n="hero.primary">Посетете ни</a>
-            <a class="button secondary" href="#story" data-i18n="hero.secondary">Запознайте се с нас</a>
+          <p class="hero-copy" data-i18n="hero.copy">Място, в което фокусът е един: различни видове еклери по оригинална рецепта, приготвени на място с истински съставки, неустоим крем и фина глазура.</p>
+          <div class="hero-cta">
+            <div class="hero-services" aria-label="Нашите услуги">
+              <span class="hero-services-dot" aria-hidden="true"></span>
+              <span class="hero-services-track" data-services-rotator>
+                <span class="hero-services-text">Поръчайте еклери за дома</span>
+              </span>
+            </div>
+            <div class="hero-actions">
+              <a class="button primary" href="#visit" data-contact-cta data-i18n="hero.primary">Посетете ни</a>
+              <a class="button secondary" href="#story" data-i18n="hero.secondary">Запознайте се с нас</a>
+            </div>
           </div>
         </div>
       </section>
@@ -499,6 +502,6 @@
       <span class="footer-copy" data-i18n="footer.copyright">© 2026 Пекарна Еклерия. Специализирана пекарна за еклери във Варна. Всички права запазени.</span>
     </footer>
 
-    <script src="script.js?v=gold-noir-2"></script>
+    <script src="script.js?v=gold-noir-8"></script>
   </body>
 </html>
