@@ -46,6 +46,9 @@ html {
   scroll-padding-top: calc(var(--header-h) + 14px);
   overflow-x: clip;
   max-width: 100%;
+  /* stop iOS Safari from auto-inflating hero text (made the copy/eyebrow huge on phones) */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -2078,9 +2081,15 @@ html.js-reveal [data-reveal].is-visible {
   }
 
   /* tighter hero rhythm so both CTA buttons are visible on first load */
-  .hero-content .eyebrow { margin-bottom: 10px; }
+  .hero-content .eyebrow {
+    margin-bottom: 10px;
+    font-size: 10px;
+    letter-spacing: .16em;
+    flex-wrap: wrap;          /* let the label wrap instead of pushing off-screen */
+    row-gap: 2px;
+  }
   .hero h1 { font-size: clamp(2.1rem, 8.2vw, 2.8rem); margin: 4px 0 12px; }
-  .hero-copy { font-size: .92rem; line-height: 1.6; margin-bottom: 16px; }
+  .hero-copy { font-size: 1rem; line-height: 1.6; margin: 0 auto 18px; max-width: 92%; }
   .hero-content::after { height: 36px; margin-top: 18px; }
 
   /* rotator pill: fixed height, text always on ONE line (no jumping button) */
@@ -2178,12 +2187,12 @@ html.js-reveal [data-reveal].is-visible {
       linear-gradient(180deg, rgba(13, 8, 5, .30) 0%, transparent 26%, rgba(13, 8, 5, .55) 100%);
   }
 
-  /* supporting line, not the headline — smaller still, centered, dropped lower */
+  /* supporting line, centered, dropped lower, a touch larger */
   .hero-copy {
-    max-width: 40ch;
-    margin: 62px auto 30px;
-    font-size: clamp(0.85rem, 0.98vw, 0.98rem);
-    line-height: 1.5;
+    max-width: 42ch;
+    margin: 88px auto 30px;
+    font-size: clamp(0.98rem, 1.15vw, 1.16rem);
+    line-height: 1.55;
     text-align: center;
   }
 
@@ -2209,14 +2218,14 @@ html.js-reveal [data-reveal].is-visible {
   }
 
   /* equal-width CTAs → the gap is dead-centre, so the cue below lines up naturally.
-     slightly tighter type keeps the longer label on a single line at every width */
+     larger, taller buttons; nowrap keeps the longer label on one line */
   .hero-actions .button {
     flex: 1 1 0;
     min-width: 0;
     white-space: nowrap;
-    padding: 15px 12px;
-    font-size: 10.5px;
-    letter-spacing: .1em;
+    padding: 18px 16px;
+    font-size: 12px;
+    letter-spacing: .12em;
   }
 
   /* scroll cue centered between the two buttons (as on mobile) */
