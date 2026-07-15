@@ -2094,8 +2094,8 @@ html.js-reveal [data-reveal].is-visible {
   .hero-content {
     min-height: 100svh;
     justify-content: flex-start;
-    padding-top: calc(var(--header-h) + 16px);
-    padding-bottom: 34px;
+    padding-top: calc(var(--header-h) + 8px);
+    padding-bottom: 22px;
   }
 
   /* eyebrow: a touch larger but always on ONE line
@@ -2113,8 +2113,15 @@ html.js-reveal [data-reveal].is-visible {
 
   .hero h1 { font-size: clamp(2.1rem, 8.2vw, 2.8rem); margin: 4px 0 12px; }
 
-  /* smaller copy, kept compact (~4 lines) so the middle stays open for the film */
-  .hero-copy { font-size: 14px; line-height: 1.55; margin: 0 auto 18px; max-width: 90%; }
+  /* smaller copy, justified, kept to ~4 lines so the middle stays open for the film */
+  .hero-copy {
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 0 auto 18px;
+    max-width: 95%;
+    text-align: justify;
+    text-align-last: center;
+  }
   .hero-content::after { height: 30px; margin-top: 12px; }
 
   /* the CTA group drops to the lower part of the screen */
@@ -2207,7 +2214,7 @@ html.js-reveal [data-reveal].is-visible {
     max-width: none;
     min-height: 100svh;
     margin-left: 0;
-    justify-content: flex-start;
+    justify-content: space-between; /* eyebrow top, copy centered in between, CTA bottom */
     padding-top: calc(var(--header-h) + 40px);
     padding-left: clamp(24px, 4vw, 64px);
     padding-right: clamp(24px, 4vw, 64px);
@@ -2224,13 +2231,14 @@ html.js-reveal [data-reveal].is-visible {
       linear-gradient(180deg, rgba(13, 8, 5, .30) 0%, transparent 26%, rgba(13, 8, 5, .55) 100%);
   }
 
-  /* supporting line, centered, dropped lower, a touch larger */
+  /* supporting line: centered between eyebrow and CTA, justified, kept to 3 lines */
   .hero-copy {
-    max-width: 42ch;
-    margin: 88px auto 30px;
+    max-width: 52ch;
+    margin: 0 auto;
     font-size: clamp(0.98rem, 1.15vw, 1.16rem);
     line-height: 1.55;
-    text-align: center;
+    text-align: justify;
+    text-align-last: center;
   }
 
   /* pill + buttons share one column whose width = the pill's natural width,
@@ -2242,7 +2250,7 @@ html.js-reveal [data-reveal].is-visible {
     align-items: stretch;
     width: max-content;
     max-width: 100%;
-    margin-top: auto;
+    margin-top: 0; /* space-between on hero-content pins this group to the bottom */
   }
 
   .hero-services { margin-bottom: 26px; }
