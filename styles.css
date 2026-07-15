@@ -18,6 +18,7 @@
   --cream-70: rgba(246, 234, 210, .72);
   --cream-50: rgba(246, 234, 210, .5);
   --paper: #fbf4e7;
+  --paper-smoked: #e6d5b3; /* darker "smoked beige" for the cream cards */
   --ink: #241509;
   --ink-soft: #5b4630;
 
@@ -912,12 +913,12 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   border-radius: var(--r-lg);
   background:
     radial-gradient(900px 500px at 88% 0%, rgba(200, 151, 63, .12), transparent 55%),
-    var(--paper);
+    var(--paper-smoked);
   color: var(--ink);
   box-shadow:
     0 40px 100px rgba(0, 0, 0, .5),
     inset 0 0 0 1px rgba(138, 90, 40, .18),
-    inset 0 0 0 7px var(--paper),
+    inset 0 0 0 7px var(--paper-smoked),
     inset 0 0 0 8px rgba(138, 90, 40, .22);
 }
 
@@ -1190,6 +1191,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .product-categories {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
   margin-bottom: 8px;
 }
@@ -1681,13 +1683,20 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 
 /* ---------- visit ---------- */
 
-.visit {
+.visit { padding-block: clamp(56px, 7vw, 96px); }
+
+/* everything (address, contacts, hours, QR) lives inside ONE cream card */
+.visit-grid {
+  width: 100%;
+  align-self: stretch;
   display: grid;
-  grid-template-columns: 1.42fr .6fr;
-  gap: 22px;
-  align-items: stretch; /* right column always ends level with the cream card */
-  padding-block: clamp(66px, 8vw, 110px);
+  grid-template-columns: 1.35fr .82fr;
+  gap: clamp(26px, 3vw, 48px);
+  margin-top: clamp(22px, 2.6vw, 34px);
+  text-align: left;
+  align-items: start;
 }
+.visit-main { min-width: 0; }
 
 .visit-card {
   position: relative;
@@ -1698,12 +1707,12 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   border-radius: var(--r-lg);
   background:
     radial-gradient(800px 400px at 90% -10%, rgba(200, 151, 63, .14), transparent 55%),
-    var(--paper);
+    var(--paper-smoked);
   color: var(--ink);
   box-shadow:
     0 40px 100px rgba(0, 0, 0, .5),
     inset 0 0 0 1px rgba(138, 90, 40, .18),
-    inset 0 0 0 7px var(--paper),
+    inset 0 0 0 7px var(--paper-smoked),
     inset 0 0 0 8px rgba(138, 90, 40, .22);
 }
 
@@ -1798,9 +1807,9 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   gap: 12px;
   padding: 11px 16px;
   border-radius: 999px;
-  background: #fff;
-  border: 1px solid rgba(138, 90, 40, .22);
-  color: var(--ink);
+  background: linear-gradient(150deg, var(--cocoa), var(--espresso));
+  border: 1px solid rgba(232, 181, 99, .32);
+  color: var(--cream);
   font-size: .92rem;
   font-weight: 600;
   transition: border-color .3s var(--ease), box-shadow .3s var(--ease), translate .3s var(--ease);
@@ -1821,9 +1830,9 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   height: 34px;
   flex: none;
   border-radius: 50%;
-  background: linear-gradient(140deg, rgba(232, 181, 99, .28), rgba(200, 151, 63, .16));
-  border: 1px solid rgba(138, 90, 40, .3);
-  color: var(--bronze);
+  background: linear-gradient(140deg, rgba(232, 181, 99, .4), rgba(200, 151, 63, .2));
+  border: 1px solid rgba(232, 181, 99, .35);
+  color: var(--gold-3);
 }
 
 .contact-icon svg {
@@ -1868,7 +1877,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 }
 
 .hours h3 {
-  font-size: 1.4rem;
+  font-size: 1.55rem;
   margin-bottom: 12px;
   background: linear-gradient(110deg, var(--cream), var(--gold-3));
   -webkit-background-clip: text;
@@ -1891,7 +1900,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .hours dl div:last-child { border-bottom: none; }
 
 .hours dt {
-  font-size: .85rem;
+  font-size: .98rem;
   font-weight: 600;
   letter-spacing: .06em;
   color: var(--cream-70);
@@ -1900,7 +1909,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .hours dd {
   margin: 0;
   font-family: var(--serif);
-  font-size: 1.08rem;
+  font-size: 1.22rem;
   font-weight: 700;
   color: var(--gold-3);
   white-space: nowrap;
@@ -1930,7 +1939,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 }
 
 .storefront-photo {
-  grid-column: 1 / -1;
+  margin-top: clamp(22px, 2.6vw, 34px);
   display: grid;
   grid-template-columns: 1.35fr 1fr;
   gap: 24px;
@@ -2037,6 +2046,9 @@ html.js-reveal [data-reveal].is-visible {
     height: auto;
     overflow: visible;
     border-radius: var(--r-lg);
+    /* blend the warm-brown stage in softly instead of a hard top edge */
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 60px);
+    mask-image: linear-gradient(180deg, transparent 0, #000 60px);
   }
 
   /* the ride is vertical here, so the desktop progress counter is meaningless */
@@ -2086,7 +2098,7 @@ html.js-reveal [data-reveal].is-visible {
 
   .service-list { grid-template-columns: 1fr; }
 
-  .visit { grid-template-columns: 1fr; }
+  .visit-grid { grid-template-columns: 1fr; gap: 22px; }
 
   /* stacked view: QR card back to its natural size */
   .visit-review { flex: none; min-height: 0; }
@@ -2208,7 +2220,17 @@ html.js-reveal [data-reveal].is-visible {
   .story .section-copy p:nth-of-type(1)::first-letter { font-size: 3.6rem; }
 
   .contact-grid { grid-template-columns: 1fr; max-width: none; }
-  .contact-grid a { font-size: .85rem; gap: 10px; }
+  .contact-grid a {
+    font-size: .8rem;
+    gap: 10px;
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+
+  /* section kickers stay on ONE line on phones (shorter dashes, tighter spacing) */
+  .section .eyebrow { letter-spacing: .18em; }
+  .section .eyebrow::before,
+  .section .eyebrow::after { width: 16px; }
   .contact-icon { width: 30px; height: 30px; }
 
   .product-slide-copy h3 { font-size: 2.4rem; }
@@ -2377,3 +2399,6 @@ html.js-reveal [data-reveal].is-visible {
   /* every section kicker matches the hero eyebrow size + gold tone */
   .section .eyebrow { font-size: 15.8px; }
 }
+
+/* keep the unified visit card's heading centred (beats the base align-items) */
+.visit-card { align-items: center; }
