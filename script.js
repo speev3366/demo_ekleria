@@ -98,6 +98,7 @@ const translations = {
     "hours.saturday": "Събота",
     "hours.sunday": "Неделя",
     "hours.closed": "Почивен ден",
+    "contact.title": "Форми за контакт",
     "footer.note": "Специализирана пекарна за еклери във Варна.",
     "footer.copyright": "© 2026 Пекарна Еклерия. Специализирана пекарна за еклери във Варна. Всички права запазени."
   },
@@ -200,6 +201,7 @@ const translations = {
     "hours.saturday": "Saturday",
     "hours.sunday": "Sunday",
     "hours.closed": "Day off",
+    "contact.title": "Contact options",
     "footer.note": "Specialized eclair bakery in Varna.",
     "footer.copyright": "© 2026 Bakery Ekleria. Specialized eclair bakery in Varna. All rights reserved."
   }

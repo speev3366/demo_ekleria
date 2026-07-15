@@ -262,8 +262,9 @@ h2 {
 }
 .products .products-intro > p { max-width: 62ch; }
 
-/* visit card: centre its heading block like the rest */
-.visit-card { align-items: center; text-align: center; }
+/* visit card: keep only the section kicker centred; its two content columns
+   have their own, intentionally left-aligned hierarchy */
+.visit-card { align-items: center; }
 
 /* golden shimmer utility used by big headlines */
 @keyframes goldSheen {
@@ -1685,18 +1686,25 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 
 .visit { padding-block: clamp(56px, 7vw, 96px); }
 
-/* everything (address, contacts, hours, QR) lives inside ONE cream card */
+/* address + review on the left; hours + contact options on the right */
 .visit-grid {
   width: 100%;
   align-self: stretch;
   display: grid;
-  grid-template-columns: 1.35fr .82fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(26px, 3vw, 48px);
   margin-top: clamp(22px, 2.6vw, 34px);
   text-align: left;
   align-items: start;
 }
-.visit-main { min-width: 0; }
+.visit-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: min(100%, 640px);
+  justify-self: start;
+  min-width: 0;
+}
 
 .visit-card {
   position: relative;
@@ -1718,8 +1726,21 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 
 .visit-card .eyebrow { color: var(--bronze); }
 .visit-card .eyebrow::before { background: linear-gradient(90deg, transparent, var(--bronze)); box-shadow: none; }
-.visit-card h2 { color: var(--ink); }
-.visit-card > p { color: var(--ink-soft); max-width: 58ch; }
+.visit-main h2 {
+  color: var(--ink);
+  text-align: left;
+  max-width: 13ch;
+  margin-bottom: 18px;
+}
+
+.visit-copy {
+  width: 100%;
+  max-width: 100%;
+  margin: 2px 0 0;
+  color: var(--ink-soft);
+  font-size: calc(1rem + 3px);
+  line-height: 1.65;
+}
 
 .visit-map-hover {
   position: relative;
@@ -1730,15 +1751,15 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .visit-map-icon {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
+  gap: 12px;
+  padding: 15px 30px;
   border-radius: 999px;
   background:
     radial-gradient(140% 230% at 50% 125%, rgba(200, 151, 63, .3), rgba(200, 151, 63, .08) 60%, transparent 85%),
     rgba(255, 252, 245, .55);
   border: 1px solid rgba(138, 90, 40, .45);
   color: var(--ink);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: .18em;
   text-transform: uppercase;
@@ -1755,8 +1776,8 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .visit-pin { display: inline-flex; }
 
 .visit-pin svg {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
@@ -1796,9 +1817,9 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
-  margin-top: 22px;
+  margin-top: 0;
   width: 100%;
-  max-width: 460px;
+  max-width: none;
 }
 
 .contact-grid a {
@@ -1862,42 +1883,45 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: min(100%, 640px);
+  justify-self: end;
   min-height: 0;
 }
 
-.hours {
+.visit-panel {
   flex: none;
   padding: clamp(22px, 2.4vw, 28px);
   border-radius: var(--r-lg);
   border: 1px solid transparent;
   background:
-    linear-gradient(var(--espresso), var(--espresso)) padding-box,
-    linear-gradient(150deg, rgba(232, 181, 99, .5), rgba(232, 181, 99, .07) 45%, rgba(232, 181, 99, .3)) border-box;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, .4);
+    linear-gradient(145deg, rgba(255, 252, 245, .72), rgba(232, 213, 179, .56)) padding-box,
+    linear-gradient(150deg, rgba(138, 90, 40, .42), rgba(138, 90, 40, .12) 48%, rgba(138, 90, 40, .3)) border-box;
+  box-shadow: 0 20px 48px rgba(75, 47, 20, .18);
 }
 
-.hours h3 {
+.visit-panel h3 {
   font-size: 1.55rem;
-  margin-bottom: 12px;
-  background: linear-gradient(110deg, var(--cream), var(--gold-3));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  margin-bottom: 16px;
+  color: var(--ink);
 }
 
-.hours dl { margin: 0; }
+.hours dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
 
 .hours dl div {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 11px 0;
-  border-bottom: 1px solid rgba(246, 234, 210, .1);
+  min-height: 56px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  background: linear-gradient(150deg, var(--cocoa), var(--espresso));
+  border: 1px solid rgba(232, 181, 99, .32);
 }
-
-.hours dl div:last-child { border-bottom: none; }
 
 .hours dt {
   font-size: .98rem;
@@ -1916,8 +1940,10 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 }
 
 .visit-review {
-  flex: 1;
-  min-height: 240px;
+  width: 100%;
+  align-self: stretch;
+  margin-top: 12px;
+  min-height: 0;
   border-radius: var(--r-lg);
   overflow: hidden;
   border: 1px solid var(--hairline-gold);
@@ -1930,12 +1956,13 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   translate: 0 -4px;
 }
 
-.visit-review-qr { display: block; height: 100%; }
+.visit-review-qr { display: block; }
 
 .visit-review-qr img {
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* trims only the decorative wheat edges */
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
 }
 
 .storefront-photo {
@@ -1943,7 +1970,6 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   display: grid;
   grid-template-columns: 1.35fr 1fr;
   gap: 24px;
-  margin-top: 4px;
 }
 
 .storefront-photo img {
@@ -2100,10 +2126,10 @@ html.js-reveal [data-reveal].is-visible {
 
   .visit-grid { grid-template-columns: 1fr; gap: 22px; }
 
-  /* stacked view: QR card back to its natural size */
-  .visit-review { flex: none; min-height: 0; }
-  .visit-review-qr { height: auto; }
-  .visit-review-qr img { height: auto; object-fit: fill; }
+  .visit-main,
+  .visit-aside { width: 100%; justify-self: stretch; }
+  .visit-main h2 { max-width: none; }
+  .visit-review { width: 100%; align-self: stretch; }
 
   .storefront-photo { grid-template-columns: 1fr; }
   .storefront-photo img { height: clamp(240px, 52vw, 380px); }
@@ -2223,8 +2249,8 @@ html.js-reveal [data-reveal].is-visible {
   .contact-grid a {
     font-size: .8rem;
     gap: 10px;
-    white-space: nowrap;
-    overflow-wrap: normal;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   /* section kickers stay on ONE line on phones (shorter dashes, tighter spacing) */
@@ -2249,6 +2275,12 @@ html.js-reveal [data-reveal].is-visible {
   /* selection cards: show the whole photo instead of a hard crop */
   .product img,
   .product.feature img { height: auto; }
+}
+
+@media (max-width: 380px) {
+  .visit-card { padding: 28px 18px; }
+  .visit-panel { padding: 20px 16px; border-radius: var(--r-md); }
+  .hours dl div { align-items: flex-start; flex-direction: column; gap: 2px; }
 }
 
 /* very narrow phones: keep the rotator on one line too */
