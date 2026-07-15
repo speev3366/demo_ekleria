@@ -936,7 +936,9 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .video-section .section-copy { max-width: 640px; margin: 0 auto clamp(36px, 4.5vw, 56px); }
 .video-section .section-copy p { margin-inline: auto; }
 .video-section h2 { margin-inline: auto; }
-.video-section .eyebrow { justify-content: center; }
+/* atelier eyebrow is a <p> inside .section-copy, so `.section-copy p` cream colour
+   was overriding the gold — force the gold kicker colour back */
+.video-section .eyebrow { justify-content: center; color: var(--gold-2); }
 .video-section .eyebrow::after {
   content: "";
   width: 38px;
@@ -2095,7 +2097,7 @@ html.js-reveal [data-reveal].is-visible {
     min-height: 100svh;
     justify-content: flex-start;
     padding-top: calc(var(--header-h) + 8px);
-    padding-bottom: 22px;
+    padding-bottom: 12px;
   }
 
   /* eyebrow: a touch larger but always on ONE line
@@ -2321,4 +2323,37 @@ html.js-reveal [data-reveal].is-visible {
   }
 
   .button, .product, .service-list article, .portrait { transition: none; }
+}
+
+/* ============================================================
+   desktop polish — unified section kickers, alignment & rhythm
+   ============================================================ */
+@media (min-width: 981px) {
+  /* tighter vertical rhythm so there isn't dead space between sections */
+  .section {
+    padding-top: clamp(54px, 6vw, 92px);
+    padding-bottom: clamp(54px, 6vw, 92px);
+  }
+
+  /* the cream story card gets a little air below the gold band (and above the next section) */
+  .story { margin-top: clamp(40px, 5vw, 74px); }
+
+  /* every section kicker matches the hero eyebrow: same size + gold tone */
+  .section .eyebrow { font-size: 15.8px; }
+
+  /* single standard: the atelier block is left-aligned like every other section */
+  .video-section { text-align: left; }
+  .video-section .section-copy {
+    max-width: 780px;
+    margin: 0 0 clamp(30px, 3.4vw, 46px);
+  }
+  .video-section .section-copy p { margin-inline: 0; }
+  .video-section h2 { margin-inline: 0; }
+  .video-section .eyebrow { justify-content: flex-start; }
+  .video-section .eyebrow::after { display: none; }
+
+  /* services kicker + intro left-aligned to match the standard */
+  .services .eyebrow { justify-content: flex-start; }
+  .services .eyebrow::after { display: none; }
+  .services-intro-copy { margin-inline: 0; }
 }
