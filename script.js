@@ -49,7 +49,7 @@
 
 const translations = {
   bg: {
-    "nav.story": "История",
+    "nav.story": "За нас",
     "nav.selection": "Селекция",
     "nav.products": "Продукти",
     "nav.services": "Услуги",
@@ -154,7 +154,7 @@ const translations = {
     "footer.copyright": "© 2026 Пекарна Еклерия. Специализирана пекарна за еклери във Варна. Всички права запазени."
   },
   en: {
-    "nav.story": "Story",
+    "nav.story": "About us",
     "nav.selection": "Selection",
     "nav.products": "Products",
     "nav.services": "Services",
@@ -886,6 +886,9 @@ if (atelierPlayer) {
   if (!header) return;
   var lastY = window.scrollY;
   var ticking = false;
+  var introDismissed = window.scrollY > 1;
+  var wheelGestureLocked = false;
+  var wheelGestureTimer = 0;
   // After a menu/anchor link is tapped the page auto-scrolls; keep the header
   // visible through that ride and only resume hiding once the user moves again.
   var suppress = false;
@@ -896,12 +899,43 @@ if (atelierPlayer) {
       header.classList.remove("header-hidden");
     }
   }, true);
-  ["wheel", "touchmove", "keydown"].forEach(function (ev) {
+  ["touchmove", "keydown"].forEach(function (ev) {
     window.addEventListener(ev, function () { suppress = false; }, { passive: true });
   });
+
+  function finishIntroWheelGestureSoon() {
+    window.clearTimeout(wheelGestureTimer);
+    wheelGestureTimer = window.setTimeout(function () {
+      wheelGestureLocked = false;
+    }, 180);
+  }
+
+  /* At the very top, the first downward mouse-wheel gesture dismisses only
+     the floating navigation. A fresh second gesture starts page movement. */
+  window.addEventListener("wheel", function (event) {
+    suppress = false;
+    if (window.innerWidth <= 980 || event.deltaY <= 0) return;
+
+    if (wheelGestureLocked) {
+      event.preventDefault();
+      finishIntroWheelGestureSoon();
+      return;
+    }
+
+    if (window.scrollY <= 1 && !header.classList.contains("header-hidden")) {
+      event.preventDefault();
+      introDismissed = true;
+      wheelGestureLocked = true;
+      header.classList.add("header-hidden");
+      finishIntroWheelGestureSoon();
+    }
+  }, { passive: false });
+
   function update() {
     var y = Math.max(0, window.scrollY);
-    if (suppress || document.body.classList.contains("menu-open") || y < 90) {
+    if (y <= 1 && y < lastY) introDismissed = false;
+
+    if (suppress || document.body.classList.contains("menu-open") || (y <= 1 && !introDismissed)) {
       header.classList.remove("header-hidden");
     } else if (y > lastY + 5) {
       header.classList.add("header-hidden");   // scrolling down

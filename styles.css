@@ -139,6 +139,19 @@ main,
   z-index: 1;
 }
 
+/* The hero is inset and rounded; this full-width noir layer keeps the fixed
+   decorative side stripes from showing behind the video itself. */
+main::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  height: 100vh;
+  height: 100svh;
+  background: var(--noir);
+  pointer-events: none;
+}
+
 .edge-stripes::before,
 .edge-stripes::after {
   content: "";
@@ -372,28 +385,33 @@ h2 {
 
 .site-header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: clamp(6px, .55vw, 9px);
+  left: clamp(8px, .8vw, 14px);
+  right: clamp(8px, .8vw, 14px);
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  height: var(--header-h);
-  padding: 0 var(--page-pad);
+  height: calc(var(--header-h) - 10px);
+  padding: 0 clamp(18px, 3.4vw, 64px);
   transition: transform .5s var(--ease), background-color .45s var(--ease), border-color .45s var(--ease), backdrop-filter .45s var(--ease);
-  border-bottom: 1px solid transparent;
+  border: 1px solid rgba(232, 181, 99, .14);
+  border-radius: clamp(17px, 1.45vw, 24px);
+  background: linear-gradient(105deg, rgba(13, 8, 5, .92), rgba(25, 16, 10, .86));
+  backdrop-filter: blur(16px) saturate(1.12);
+  -webkit-backdrop-filter: blur(16px) saturate(1.12);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(246, 234, 210, .035);
 }
 
 .site-header.scrolled {
-  background: rgba(13, 8, 5, .78);
+  background: rgba(13, 8, 5, .88);
   backdrop-filter: blur(18px) saturate(1.2);
   -webkit-backdrop-filter: blur(18px) saturate(1.2);
-  border-bottom-color: rgba(232, 181, 99, .14);
+  border-color: rgba(232, 181, 99, .2);
 }
 
-.site-header.header-hidden { transform: translateY(-100%); }
+.site-header.header-hidden { transform: translateY(calc(-100% - 14px)); }
 
 .brand {
   display: inline-flex;
@@ -680,6 +698,10 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   justify-content: center;
   overflow: hidden;
   isolation: isolate;
+  margin-inline: clamp(8px, .8vw, 14px);
+  border-radius: clamp(22px, 2vw, 34px);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .38), inset 0 0 0 1px rgba(232, 181, 99, .12);
+  z-index: 1;
 }
 
 .hero-video-bg,
@@ -909,15 +931,17 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   width: auto;
   margin: 0 var(--page-pad);
   padding: 17px clamp(20px, 3vw, 48px);
-  border: 1px solid rgba(255, 226, 164, .66);
+  border: 1px solid rgba(232, 181, 99, .52);
   border-radius: 999px;
-  background: linear-gradient(100deg, #7c4e1d 0%, var(--gold) 26%, var(--gold-2) 50%, var(--gold) 74%, #7c4e1d 100%);
+  background:
+    linear-gradient(105deg, rgba(61, 35, 16, .42), rgba(201, 151, 63, .48) 32%, rgba(232, 181, 99, .62) 50%, rgba(201, 151, 63, .48) 68%, rgba(61, 35, 16, .42)),
+    rgba(105, 63, 25, .94);
   box-shadow:
-    inset 0 1px 0 rgba(255, 246, 224, .42),
+    inset 0 1px 0 rgba(255, 246, 224, .24),
     inset 0 -1px 0 rgba(91, 54, 18, .34),
-    0 0 28px rgba(232, 181, 99, .3),
-    -18px 3px 34px rgba(232, 181, 99, .2),
-    18px 3px 34px rgba(232, 181, 99, .2);
+    0 0 24px rgba(201, 151, 63, .2),
+    -18px 3px 32px rgba(160, 107, 36, .14),
+    18px 3px 32px rgba(160, 107, 36, .14);
   overflow: hidden;
   isolation: isolate;
 }
@@ -927,7 +951,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, .38) 50%, transparent 60%);
+  background: linear-gradient(115deg, transparent 40%, rgba(243, 190, 92, .28) 50%, transparent 60%);
   transform: translateX(-120%);
   animation: bandShine 6s var(--ease) infinite;
   pointer-events: none;
@@ -1768,7 +1792,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min(70%, 475px);
+  width: min(100%, 475px);
   justify-self: center;
   min-width: 0;
 }
@@ -1796,10 +1820,10 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 
 .visit-address-row {
   display: grid;
-  grid-template-columns: 1fr;
-  align-items: start;
-  justify-items: center;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  justify-items: stretch;
+  gap: 14px;
   width: 100%;
   align-self: stretch;
   margin-bottom: 10px;
@@ -1808,16 +1832,16 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .visit-main h2 {
   min-width: 0;
   color: var(--ink);
-  font-size: clamp(2.65rem, 2.8vw, 3.05rem);
-  line-height: 1;
-  text-align: center;
+  font-size: 1.65rem;
+  line-height: 1.08;
+  text-align: left;
   max-width: none;
   margin-bottom: 0;
   text-wrap: initial;
 }
 
 .visit-address-title span {
-  display: block;
+  display: inline;
   white-space: nowrap;
 }
 
@@ -1827,8 +1851,24 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   align-self: stretch;
   margin: 0;
   color: var(--ink-soft);
-  font-size: calc(1rem + 3px);
-  line-height: 1.5;
+  font-size: .94rem;
+  line-height: 1.55;
+}
+
+.visit-location-panel {
+  align-items: stretch;
+  justify-content: flex-start;
+  overflow: visible;
+}
+
+.visit-location-panel .visit-map-popup {
+  left: auto;
+  right: 0;
+  transform-origin: right bottom;
+}
+
+.visit-location-panel .visit-map-hover.is-popup-below .visit-map-popup {
+  transform-origin: right top;
 }
 
 .visit-map-hover {
@@ -1841,8 +1881,11 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .visit-map-icon {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 15px 30px;
+  justify-content: center;
+  gap: 0;
+  width: 42px;
+  height: 42px;
+  padding: 0;
   border-radius: 999px;
   background:
     radial-gradient(140% 230% at 50% 125%, rgba(200, 151, 63, .3), rgba(200, 151, 63, .08) 60%, transparent 85%),
@@ -1989,7 +2032,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: min(95%, 532px);
+  width: min(100%, 475px);
   justify-self: center;
   justify-content: space-between;
   min-height: 0;
@@ -2071,7 +2114,7 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 
 .visit-review {
   grid-area: review;
-  width: min(70%, 475px);
+  width: min(100%, 475px);
   align-self: end;
   justify-self: center;
   margin-top: 0;
@@ -2101,15 +2144,17 @@ body.menu-open .mobile-nav { transform: translateX(0); }
 .storefront-photo {
   margin-top: clamp(22px, 2.6vw, 34px);
   display: grid;
-  grid-template-columns: 1.35fr 1fr;
+  /* Source ratios are 5:4 and 3:2. A 5:6 column ratio gives both images
+     the same rendered height without cropping at any desktop zoom level. */
+  grid-template-columns: 5fr 6fr;
   gap: 24px;
+  align-items: start;
 }
 
 .storefront-photo img {
   width: 100%;
-  height: clamp(300px, 40vw, 520px);
-  object-fit: cover;
-  object-position: 50% 0; /* keep the "ПЕКАРНА ЕКЛЕРИЯ" signage in frame */
+  height: auto;
+  object-fit: contain;
   border-radius: var(--r-lg);
   border: 1px solid var(--hairline-gold);
   box-shadow: 0 24px 60px rgba(0, 0, 0, .4);
@@ -2169,7 +2214,7 @@ html.js-reveal [data-reveal].is-visible {
   .eclair-pedestal { width: min(34vw, 430px); }
 }
 
-@media (max-width: 1120px) {
+@media (max-width: 1180px) {
   .visit-grid {
     grid-template-columns: minmax(0, 680px);
     grid-template-areas:
@@ -2291,15 +2336,25 @@ html.js-reveal [data-reveal].is-visible {
   .hours dl,
   .hours dt { min-width: 0; }
   .visit-address-row { grid-template-columns: 1fr; align-items: start; justify-items: center; gap: 0; width: 100%; align-self: stretch; margin-bottom: 0; }
-  .visit-main h2 { max-width: none; }
+  .visit-main h2 {
+    max-width: none;
+    font-size: clamp(1.55rem, 6vw, 1.85rem);
+    text-align: center;
+  }
   .visit-address-title span { white-space: normal; }
   .visit-address-row h2 { margin-bottom: 18px; }
   .visit-address-row .visit-map-hover { margin: 4px 0 14px; }
+  .visit-address-row .visit-map-icon {
+    width: auto;
+    height: auto;
+    gap: 10px;
+    padding: 12px 18px;
+  }
   .visit-copy { width: 100%; max-width: 54ch; align-self: stretch; }
   .visit-review { width: 100%; align-self: stretch; justify-self: stretch; }
 
   .storefront-photo { grid-template-columns: 1fr; }
-  .storefront-photo img { height: clamp(240px, 52vw, 380px); }
+  .storefront-photo img { height: auto; }
 
   /* stacked order on phones: display case first, storefront exterior second */
   .storefront-photo img:first-child { order: 2; }
@@ -2313,7 +2368,7 @@ html.js-reveal [data-reveal].is-visible {
   .hero-edge-transition { height: clamp(18px, 5vw, 24px); }
   .story { margin-top: clamp(18px, 5vw, 24px); }
 
-  .visit-main h2 { font-size: clamp(2.15rem, 9.4vw, 2.4rem); }
+  .visit-main h2 { font-size: clamp(1.5rem, 6.8vw, 1.78rem); }
   .visit-panel h3 { font-size: clamp(1.42rem, 6vw, 1.58rem); }
 
   .brand span { font-size: 1.2rem; }
@@ -2412,8 +2467,40 @@ html.js-reveal [data-reveal].is-visible {
   .mobile-nav-langs { display: flex; }
   .mobile-nav { width: min(82vw, 368px); }
 
+  .marquee {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 14px;
+    padding: 24px 18px;
+    border-radius: 36px;
+  }
 
-  .marquee span { padding: 0 16px; font-size: 10px; }
+  .marquee span {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr) 16px;
+    align-items: center;
+    width: min(100%, 330px);
+    padding: 0;
+    font-size: clamp(8.6px, 2.55vw, 10px);
+    line-height: 1.4;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .marquee span::before {
+    position: static;
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
+    translate: none;
+  }
+
+  .marquee span::after {
+    content: "";
+    grid-column: 3;
+    grid-row: 1;
+  }
 
   .story { padding: 40px 24px; }
   .story .section-copy p:nth-of-type(1)::first-letter { font-size: 3.6rem; }
@@ -2448,7 +2535,9 @@ html.js-reveal [data-reveal].is-visible {
   /* atelier clips are shot vertical — give the player ~25% more height */
   .video-player video { aspect-ratio: 10 / 7; }
   .video-section { padding-bottom: 30px; }
-  .selection { padding-top: 60px; }
+  .selection,
+  .products,
+  .services { padding-top: 42px; }
 
   /* selection cards: show the whole photo instead of a hard crop */
   .product img,
@@ -2470,6 +2559,18 @@ html.js-reveal [data-reveal].is-visible {
 
 /* ---------- desktop hero: gold text over the soft-focus left, clean film on the right ---------- */
 @media (min-width: 981px) {
+  .visit-location-panel .visit-map-icon > [data-i18n="visit.map"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .hero { justify-content: flex-start; align-items: stretch; }
 
   /* nudge the nav a touch right so it clears the film */
@@ -2597,35 +2698,121 @@ html.js-reveal [data-reveal].is-visible {
    desktop polish — unified section kickers, alignment & rhythm
    ============================================================ */
 @media (min-width: 981px) {
-  .visit-address-row .visit-map-icon {
-    gap: 8.5px;
-    padding: 12px 17px;
-    font-size: 11.4px;
-    letter-spacing: .123em;
+  /* Four genuinely aligned submenus: location / hours, review / contacts. */
+  .visit-grid {
+    --visit-bottom-row: clamp(306px, 16.5vw, 320px);
+    grid-template-columns: repeat(2, minmax(0, 475px));
+    grid-template-rows: auto var(--visit-bottom-row);
+    grid-template-areas:
+      "main hours"
+      "review contact";
+    justify-content: center;
+    column-gap: clamp(54px, 5vw, 76px);
+    row-gap: 24px;
+    align-items: stretch;
   }
 
-  .visit-address-row .visit-pin svg { width: 19px; height: 19px; }
+  .visit-aside { display: contents; }
+  .visit-main { grid-area: main; width: 100%; height: 100%; }
+  .hours { grid-area: hours; }
+  .contact-panel { grid-area: contact; }
 
-  .visit-address-row .visit-map-hover { margin-top: 6px; }
+  .visit-panel {
+    width: 100%;
+    height: 100%;
+    padding: 24px;
+  }
 
-  /* Desktop elements use the same grid tracks, so browser zoom cannot
-     desynchronise their alignment. The requested 5% reduction is applied
-     to both the QR card and the right-hand menus without transform scaling. */
-  .visit-panel { padding: 30px; }
-  .visit-panel h3 { font-size: 1.57rem; margin-bottom: 15px; }
+  .visit-panel.visit-location-panel {
+    z-index: 5;
+    overflow: visible;
+    justify-content: center;
+  }
+
+  .visit-main h2 { font-size: 1.5rem; }
+
+  .visit-address-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .visit-address-title { flex: 0 1 auto; }
+
+  .visit-address-row .visit-map-icon {
+    width: 38px;
+    height: 38px;
+    gap: 0;
+    padding: 0;
+    border-radius: 12px;
+    background:
+      linear-gradient(145deg, rgba(255, 252, 245, .8), rgba(200, 151, 63, .2)),
+      var(--paper-smoked);
+    border-color: rgba(138, 90, 40, .38);
+    font-size: 11.4px;
+    letter-spacing: .123em;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .72),
+      0 7px 18px rgba(113, 70, 24, .16);
+  }
+
+  .visit-address-row .visit-pin svg { width: 18px; height: 18px; }
+
+  .visit-address-row .visit-map-hover { margin-top: 0; }
+
+  .visit-panel h3 { font-size: 1.48rem; margin-bottom: 12px; }
   .hours dl div,
-  .contact-grid a { min-height: 55px; }
-  .hours dl div { padding: 10px 17px; }
-  .hours dt { font-size: .93rem; }
-  .hours dd { font-size: 1.16rem; }
-  .contact-grid a { padding: 10px 15px; font-size: .875rem; }
-  .contact-icon { width: 32px; height: 32px; }
+  .contact-grid a { min-height: 48px; }
+  .hours dl,
+  .contact-grid { gap: 8px; }
+  .hours dl div { padding: 8px 15px; }
+  .hours dt { font-size: .86rem; }
+  .hours dd { font-size: 1.05rem; }
+  .contact-grid a { padding: 8px 13px; font-size: .82rem; }
+  .contact-icon { width: 30px; height: 30px; }
+
+  .visit-review {
+    grid-area: review;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(520px 260px at 90% -10%, rgba(200, 151, 63, .12), transparent 55%),
+      var(--paper-smoked);
+  }
+
+  .visit-review-qr,
+  .visit-review-qr picture {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .visit-review-qr img {
+    width: calc(var(--visit-bottom-row) - 2px);
+    height: calc(var(--visit-bottom-row) - 2px);
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+  }
 
   /* tighter vertical rhythm so there isn't dead space between sections */
   .section {
     padding-top: clamp(54px, 6vw, 92px);
     padding-bottom: clamp(54px, 6vw, 92px);
   }
+
+  .selection,
+  .products,
+  .services { padding-top: clamp(28px, 3vw, 46px); }
 
   /* the cream story card gets a little air below the gold band (and above the next section) */
   .story { margin-top: clamp(30px, 3vw, 46px); }
