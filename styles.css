@@ -2353,9 +2353,20 @@ html.js-reveal [data-reveal].is-visible {
     letter-spacing: .12em;
   }
   .visit-address-row .visit-map-icon > [data-i18n="visit.map"] { white-space: nowrap; }
-  /* A phone tap must open the full Google Maps destination immediately;
-     the desktop hover preview has no useful hover state on touch screens. */
-  .visit-map-popup { display: none; }
+  .visit-location-panel .visit-map-popup {
+    left: 50%;
+    right: auto;
+    width: min(300px, calc(100vw - 48px));
+    translate: -50% 0;
+  }
+  .visit-map-hover.is-touch-open .visit-map-popup {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+  .visit-map-hover.is-popup-below.is-touch-open .visit-map-popup {
+    transform: translateY(0) scale(1);
+  }
   .visit-copy { width: 100%; max-width: 54ch; align-self: stretch; }
   .visit-review { width: 100%; align-self: stretch; justify-self: stretch; }
 

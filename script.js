@@ -26,16 +26,55 @@
   }
 
   wraps.forEach(function (wrap) {
+    var trigger = wrap.querySelector(".visit-map-icon");
+    var popup = wrap.querySelector(".visit-map-popup");
     var schedule = function () {
       window.requestAnimationFrame(function () { place(wrap); });
     };
     wrap.addEventListener("pointerenter", schedule);
     wrap.addEventListener("focusin", schedule);
+    if (trigger && popup) {
+      trigger.setAttribute("aria-expanded", "false");
+      trigger.addEventListener("click", function (event) {
+        if (!window.matchMedia("(max-width: 980px)").matches) return;
+
+        /* On touch screens the first tap is a preview; a second tap on the
+           same button follows the link to the full Google Maps page. */
+        if (!wrap.classList.contains("is-touch-open")) {
+          event.preventDefault();
+          wraps.forEach(function (other) {
+            other.classList.remove("is-touch-open");
+            var otherTrigger = other.querySelector(".visit-map-icon");
+            var otherPopup = other.querySelector(".visit-map-popup");
+            if (otherTrigger) otherTrigger.setAttribute("aria-expanded", "false");
+            if (otherPopup) otherPopup.setAttribute("aria-hidden", "true");
+          });
+          wrap.classList.add("is-touch-open");
+          trigger.setAttribute("aria-expanded", "true");
+          popup.setAttribute("aria-hidden", "false");
+          schedule();
+        }
+      });
+    }
     var image = wrap.querySelector(".visit-map-popup img");
     if (image) {
       if (image.complete) schedule();
       else image.addEventListener("load", schedule, { once: true });
     }
+  });
+
+  document.addEventListener("pointerdown", function (event) {
+    wraps.forEach(function (wrap) {
+      if (!wrap.classList.contains("is-touch-open") || wrap.contains(event.target)) return;
+      wrap.classList.remove("is-touch-open");
+      var trigger = wrap.querySelector(".visit-map-icon");
+      var popup = wrap.querySelector(".visit-map-popup");
+      if (trigger) {
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.blur();
+      }
+      if (popup) popup.setAttribute("aria-hidden", "true");
+    });
   });
 
   var refreshOpenPreview = function () {
