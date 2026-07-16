@@ -2345,13 +2345,43 @@ html.js-reveal [data-reveal].is-visible {
   .visit-address-row h2 { margin-bottom: 18px; }
   .visit-address-row .visit-map-hover { margin: 4px 0 14px; }
   .visit-address-row .visit-map-icon {
-    width: auto;
-    height: auto;
-    gap: 10px;
-    padding: 12px 18px;
+    width: max-content;
+    height: 42px;
+    gap: 8px;
+    padding: 9px 14px;
+    font-size: 10px;
+    letter-spacing: .12em;
   }
+  .visit-address-row .visit-map-icon > [data-i18n="visit.map"] { white-space: nowrap; }
+  /* A phone tap must open the full Google Maps destination immediately;
+     the desktop hover preview has no useful hover state on touch screens. */
+  .visit-map-popup { display: none; }
   .visit-copy { width: 100%; max-width: 54ch; align-self: stretch; }
   .visit-review { width: 100%; align-self: stretch; justify-self: stretch; }
+
+  .hours > h3,
+  .contact-panel > h3 {
+    width: 100%;
+    text-align: center;
+  }
+
+  .hours dl div {
+    min-height: 46px;
+    padding: 7px 12px;
+    gap: 8px;
+  }
+
+  .hours dt {
+    flex: 1 1 auto;
+    font-size: clamp(.66rem, 2.8vw, .78rem);
+    letter-spacing: .015em;
+    white-space: nowrap;
+  }
+
+  .hours dd {
+    flex: none;
+    font-size: clamp(.86rem, 3.8vw, 1rem);
+  }
 
   .storefront-photo { grid-template-columns: 1fr; }
   .storefront-photo img { height: auto; }
@@ -2547,7 +2577,7 @@ html.js-reveal [data-reveal].is-visible {
 @media (max-width: 380px) {
   .visit-card { padding: 28px 18px; }
   .visit-panel { padding: 20px 16px; border-radius: var(--r-md); }
-  .hours dl div { align-items: flex-start; flex-direction: column; gap: 2px; }
+  .hours dl div { align-items: center; flex-direction: row; gap: 6px; }
 }
 
 /* very narrow phones: keep the rotator on one line too */
