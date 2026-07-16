@@ -1,3 +1,52 @@
+/* ============================================================
+   Smart map preview placement. Prefer opening above the trigger,
+   but use the side that fits (or has more free viewport space).
+   Kept first so this small navigation enhancement is isolated from
+   every optional section that follows in the page script.
+   ============================================================ */
+(function initSmartMapPreview() {
+  var wraps = document.querySelectorAll(".visit-map-hover");
+  if (!wraps.length) return;
+
+  function place(wrap) {
+    var popup = wrap.querySelector(".visit-map-popup");
+    var trigger = wrap.querySelector(".visit-map-icon") || wrap;
+    if (!popup || !trigger) return;
+
+    var triggerRect = trigger.getBoundingClientRect();
+    var popupHeight = Math.max(popup.offsetHeight, popup.scrollHeight, 1);
+    var viewportMargin = 16;
+    var popupGap = 14;
+    var needed = popupHeight + popupGap;
+    var spaceAbove = triggerRect.top - viewportMargin;
+    var spaceBelow = window.innerHeight - triggerRect.bottom - viewportMargin;
+    var openBelow = spaceAbove < needed && (spaceBelow >= needed || spaceBelow > spaceAbove);
+
+    wrap.classList.toggle("is-popup-below", openBelow);
+  }
+
+  wraps.forEach(function (wrap) {
+    var schedule = function () {
+      window.requestAnimationFrame(function () { place(wrap); });
+    };
+    wrap.addEventListener("pointerenter", schedule);
+    wrap.addEventListener("focusin", schedule);
+    var image = wrap.querySelector(".visit-map-popup img");
+    if (image) {
+      if (image.complete) schedule();
+      else image.addEventListener("load", schedule, { once: true });
+    }
+  });
+
+  var refreshOpenPreview = function () {
+    wraps.forEach(function (wrap) {
+      if (wrap.matches(":hover") || wrap.contains(document.activeElement)) place(wrap);
+    });
+  };
+  window.addEventListener("resize", refreshOpenPreview, { passive: true });
+  window.addEventListener("scroll", refreshOpenPreview, { passive: true });
+})();
+
 const translations = {
   bg: {
     "nav.story": "История",
@@ -89,6 +138,8 @@ const translations = {
     "services.three.copy": "Зареждаме магазини, кафетерии и сладкарници с печива и десерти за партньори, които търсят постоянство и разпознаваем вкус.",
     "visit.eyebrow": "Посетете ни",
     "visit.title": "гр. Варна, ул. Под Игото 58",
+    "visit.titleLine1": "гр. Варна, ул.",
+    "visit.titleLine2": "Под Игото 58",
     "visit.map": "Виж на картата",
     "review.title": "Оценете ни в Google",
     "review.copy": "Вашата обратна връзка е ценна за нас. Ще се радваме да ни оцените.",
@@ -192,6 +243,8 @@ const translations = {
     "services.three.copy": "We supply shops, cafes and patisseries with bakes and desserts for partners looking for consistency and a recognizable flavor.",
     "visit.eyebrow": "Visit us",
     "visit.title": "Varna, 58 Pod Igoto St.",
+    "visit.titleLine1": "Varna,",
+    "visit.titleLine2": "58 Pod Igoto St.",
     "visit.map": "View on the map",
     "review.title": "Rate us on Google",
     "review.copy": "Your feedback matters to us. We'd love your rating.",
