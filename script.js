@@ -313,7 +313,9 @@ let heroCopyRun = 0;
 // timeout, pin this line to the fallback so it cannot swap underneath the user.
 const heroCopyFontReady = document.fonts && document.fonts.load
   ? Promise.race([
-      document.fonts.load('600 18px "Montserrat"').then((faces) => faces.length > 0),
+      document.fonts.load('600 18px "Montserrat"')
+        .then((faces) => faces.length > 0)
+        .catch(() => false),
       new Promise((resolve) => setTimeout(() => resolve(false), 2500))
     ])
   : Promise.resolve(false);
@@ -379,7 +381,7 @@ function renderHeroCopy(text, run) {
       el.classList.add("is-writing");
       const finishTimer = setTimeout(() => {
         if (run === heroCopyRun) el.classList.remove("is-writing");
-      }, glyphIndex * 10 + 360);
+      }, glyphIndex * 40 + 560);
       heroCopyTimers.push(finishTimer);
     }, 220);
     heroCopyTimers.push(startTimer);
