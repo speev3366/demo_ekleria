@@ -2564,15 +2564,24 @@ html.js-reveal [data-reveal].is-visible {
   .visit-card { padding-inline: clamp(18px, 5.5vw, 24px); }
   .visit-panel { padding-inline: clamp(14px, 4vw, 20px); }
 
-  /* Keep the complete address, including 58, on one line on phones. */
+  /* Use the full available line without pushing 58 onto a second row. */
+  .visit-card {
+    --visit-mobile-title-size: clamp(1.05rem, 5.55vw, 1.42rem);
+  }
   .visit-main .visit-address-title {
     width: max-content;
     max-width: 100%;
-    font-size: clamp(.94rem, 4.6vw, 1.18rem);
+    font-size: var(--visit-mobile-title-size);
     letter-spacing: -.012em;
     white-space: nowrap;
   }
   .visit-address-title span { white-space: inherit; }
+
+  .hours > h3 {
+    font-family: var(--serif);
+    font-size: var(--visit-mobile-title-size);
+    letter-spacing: -.012em;
+  }
 
   /* section kickers stay on ONE line on phones (shorter dashes, tighter spacing) */
   .section .eyebrow { letter-spacing: .18em; }
