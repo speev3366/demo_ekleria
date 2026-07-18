@@ -464,9 +464,12 @@ const heroSources = {
 
 const heroMobileMQ = window.matchMedia("(max-width: 760px)");
 const isSafariBrowser = /^((?!chrome|chromium|android|crios|fxios|edgios).)*safari/i.test(navigator.userAgent);
+let heroDesktopFallbackActive = false;
 const wantedHeroSrc = () => {
   if (heroMobileMQ.matches) return heroSources.mobile;
-  return isSafariBrowser ? heroSources.desktopSafe : heroSources.desktopHd;
+  return (isSafariBrowser || heroDesktopFallbackActive)
+    ? heroSources.desktopSafe
+    : heroSources.desktopHd;
 };
 
 function kickHeroVideo(video) {
@@ -497,6 +500,16 @@ function applyHeroSource() {
 
 if (heroVideos.main) {
   const mainVideo = heroVideos.main;
+
+  // A partial deployment must not leave Chrome frozen on the poster. If the
+  // preferred HD file is missing or cannot be decoded, switch once to the
+  // widely compatible desktop file that is also declared in the HTML.
+  mainVideo.addEventListener("error", () => {
+    const failedSrc = mainVideo.currentSrc || mainVideo.getAttribute("src") || "";
+    if (heroMobileMQ.matches || heroDesktopFallbackActive || !failedSrc.includes("home_video_desktop_hd.mp4")) return;
+    heroDesktopFallbackActive = true;
+    applyHeroSource();
+  });
 
   applyHeroSource();
 
