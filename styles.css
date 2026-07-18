@@ -2577,14 +2577,14 @@ html.js-reveal [data-reveal].is-visible {
   }
   .visit-address-title span { white-space: inherit; }
 
-  /* Centre the address/button group, then align the smaller map button with
-     the address's left edge instead of floating in the middle of the card. */
+  /* Keep the address centred, but align the map button with the copy column. */
   .visit-address-row {
-    width: max-content;
+    width: 100%;
     max-width: 100%;
-    align-self: center;
+    align-self: stretch;
     justify-items: start;
   }
+  .visit-main .visit-address-title { justify-self: center; }
   .visit-address-row .visit-map-hover {
     justify-self: start;
   }
@@ -2593,6 +2593,12 @@ html.js-reveal [data-reveal].is-visible {
     gap: 7px;
     padding: 8px 12px;
     font-size: 9.3px;
+  }
+
+  .visit-location-panel .visit-copy {
+    text-align: justify;
+    text-align-last: left;
+    hyphens: auto;
   }
 
   .hours > h3 {
