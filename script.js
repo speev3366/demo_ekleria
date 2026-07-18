@@ -14,6 +14,17 @@
     if (!popup || !trigger) return;
 
     var triggerRect = trigger.getBoundingClientRect();
+    var mobilePreview = window.matchMedia("(max-width: 980px)").matches;
+    var locationPanel = wrap.closest(".visit-location-panel");
+    if (mobilePreview && locationPanel) {
+      var wrapRect = wrap.getBoundingClientRect();
+      var panelRect = locationPanel.getBoundingClientRect();
+      var popupShift = (panelRect.left + panelRect.width / 2) - (wrapRect.left + wrapRect.width / 2);
+      popup.style.setProperty("--map-popup-shift-x", popupShift.toFixed(2) + "px");
+    } else {
+      popup.style.removeProperty("--map-popup-shift-x");
+    }
+
     var popupHeight = Math.max(popup.offsetHeight, popup.scrollHeight, 1);
     var viewportMargin = 16;
     var popupGap = 14;

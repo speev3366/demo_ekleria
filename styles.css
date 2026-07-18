@@ -2368,7 +2368,7 @@ html.js-reveal [data-reveal].is-visible {
     right: auto;
     z-index: 50;
     width: min(300px, calc(100vw - 48px));
-    translate: -50% 0;
+    translate: calc(-50% + var(--map-popup-shift-x, 0px)) 0;
   }
   .visit-map-hover.is-touch-open .visit-map-popup {
     opacity: 1;
