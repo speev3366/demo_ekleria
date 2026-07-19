@@ -2587,7 +2587,9 @@ html.js-reveal [data-reveal].is-visible {
   .visit-main .visit-address-title { justify-self: center; }
   .visit-address-row .visit-map-hover {
     justify-self: center;
+    margin-top: 0;
   }
+  .visit-address-row h2 { margin-bottom: 14px; }
   .visit-address-row .visit-map-icon {
     height: 37px;
     gap: 6.65px;
