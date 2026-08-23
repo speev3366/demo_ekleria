@@ -708,7 +708,10 @@ if ("IntersectionObserver" in window) {
         video.pause();
       }
     });
-  }, { threshold: 0.2 });
+  /* The third atelier clip is visually scaled inside an overflow-hidden frame.
+     Its visible intersection is about 16%, so 10% still means "on screen"
+     while allowing that clip to start normally. */
+  }, { threshold: 0.1 });
 
   document.querySelectorAll("video").forEach((video) => videoObserver.observe(video));
 }
@@ -886,8 +889,15 @@ const atelierPlaylist = [
 /* Which band of the portrait frame the wide crop keeps. 50% is the middle;
    a lower number slides the picture down, a higher one lifts it up. */
 const atelierFraming = {
-  "atelier-3.mp4": "58%",   // lifted, so the cut eclair at the end stays in view
   "atelier-2.mp4": "42%",   // slid down, to match the band drawn on the frame
+};
+/* Fit the portrait clip first, then enlarge it around its center. This keeps
+   the player intact while reducing the empty space on both sides. */
+const atelierFit = {
+  "atelier-3.mp4": "contain",
+};
+const atelierScale = {
+  "atelier-3.mp4": "2.5",
 };
 let atelierIndex = 0;
 
@@ -897,6 +907,8 @@ if (atelierPlayer) {
   function atFrame(src) {
     const name = src.split("/").pop();
     atelierPlayer.style.setProperty("--atelier-y", atelierFraming[name] || "50%");
+    atelierPlayer.style.setProperty("--atelier-fit", atelierFit[name] || "cover");
+    atelierPlayer.style.setProperty("--atelier-scale", atelierScale[name] || "1");
   }
 
   atelierPlayer.src = atelierPlaylist[0];
@@ -904,10 +916,21 @@ if (atelierPlayer) {
 
   function atLoad(index) {
     atelierIndex = (index + atelierPlaylist.length) % atelierPlaylist.length;
-    atelierPlayer.src = atelierPlaylist[atelierIndex];
-    atFrame(atelierPlaylist[atelierIndex]);
+    const nextSrc = atelierPlaylist[atelierIndex];
+    atelierPlayer.src = nextSrc;
+    atFrame(nextSrc);
+
+    // A source change can interrupt the immediate play() request in some
+    // browsers. Retry once the selected clip is actually ready to decode.
+    const playLoadedClip = () => {
+      if (atelierPlayer.getAttribute("src") !== nextSrc) return;
+      atelierPlayer.muted = true;
+      const playback = atelierPlayer.play();
+      if (playback && playback.catch) playback.catch(() => {});
+    };
+    atelierPlayer.addEventListener("canplay", playLoadedClip, { once: true });
     atelierPlayer.load();
-    atelierPlayer.play().catch(() => {});
+    playLoadedClip();
     if (atCount) atCount.textContent = `${atelierIndex + 1} / ${atelierPlaylist.length}`;
   }
 
