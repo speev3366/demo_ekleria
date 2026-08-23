@@ -877,32 +877,35 @@ document.querySelectorAll(".visit-review-qr").forEach((link) => {
 });
 
 const atelierPlayer = document.querySelector("[data-atelier-player]");
-/* Each clip was shot at a different distance, so the landscape frame crops them
-   unevenly — `zoom` re-frames the odd ones out to match the rest of the set. */
 const atelierPlaylist = [
-  { src: "assets/videos/atelier-1.mp4", zoom: 1 },
-  { src: "assets/videos/aterlier-0.mp4", zoom: 1 },
-  { src: "assets/videos/atelier-3.mp4", zoom: 1.45 },
-  { src: "assets/videos/atelier-2.mp4", zoom: 1 },
+  "assets/videos/atelier-1.mp4",
+  "assets/videos/atelier-0.mp4",
+  "assets/videos/atelier-3.mp4",
+  "assets/videos/atelier-2.mp4",
 ];
+/* Which band of the portrait frame the wide crop keeps. 50% is the middle;
+   a lower number slides the picture down, a higher one lifts it up. */
+const atelierFraming = {
+  "atelier-3.mp4": "58%",   // lifted, so the cut eclair at the end stays in view
+  "atelier-2.mp4": "42%",   // slid down, to match the band drawn on the frame
+};
 let atelierIndex = 0;
 
 if (atelierPlayer) {
   const atCount = document.querySelector("[data-atelier-count]");
   const atPP = document.querySelector("[data-atelier-playpause]");
-
-  function atFrame(clip) {
-    atelierPlayer.style.setProperty("--atelier-zoom", clip.zoom);
+  function atFrame(src) {
+    const name = src.split("/").pop();
+    atelierPlayer.style.setProperty("--atelier-y", atelierFraming[name] || "50%");
   }
 
-  atelierPlayer.src = atelierPlaylist[0].src;
+  atelierPlayer.src = atelierPlaylist[0];
   atFrame(atelierPlaylist[0]);
 
   function atLoad(index) {
     atelierIndex = (index + atelierPlaylist.length) % atelierPlaylist.length;
-    const clip = atelierPlaylist[atelierIndex];
-    atelierPlayer.src = clip.src;
-    atFrame(clip);
+    atelierPlayer.src = atelierPlaylist[atelierIndex];
+    atFrame(atelierPlaylist[atelierIndex]);
     atelierPlayer.load();
     atelierPlayer.play().catch(() => {});
     if (atCount) atCount.textContent = `${atelierIndex + 1} / ${atelierPlaylist.length}`;

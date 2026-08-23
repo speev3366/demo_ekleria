@@ -1102,17 +1102,17 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   box-shadow: 0 40px 110px rgba(0, 0, 0, .55), var(--glow-gold);
 }
 
+/* Full-width frame, filled edge to edge with no bars. The clips are portrait,
+   so the frame is kept taller than a 16:9 one — that is the only thing that
+   buys back visible frame without shrinking the video inside it. */
 .video-player video {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  /* which band of the portrait frame the crop keeps; per clip, see script.js */
+  object-position: center var(--atelier-y, 50%);
   cursor: pointer;
   background: #0a0603;
-  /* per-clip re-framing; set from the playlist so every clip reads at a
-     comparable distance. Values below 1 would pillarbox the vertical source. */
-  transform: scale(var(--atelier-zoom, 1));
-  transform-origin: center;
-  transition: transform .5s var(--ease);
 }
 
 .atelier-count {
