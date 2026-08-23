@@ -1108,6 +1108,11 @@ body.menu-open .mobile-nav { transform: translateX(0); }
   object-fit: cover;
   cursor: pointer;
   background: #0a0603;
+  /* per-clip re-framing; set from the playlist so every clip reads at a
+     comparable distance. Values below 1 would pillarbox the vertical source. */
+  transform: scale(var(--atelier-zoom, 1));
+  transform-origin: center;
+  transition: transform .5s var(--ease);
 }
 
 .atelier-count {
