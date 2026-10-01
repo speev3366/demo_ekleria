@@ -155,7 +155,7 @@ const translations = {
     "product.roll.number": "Продукт 07",
     "product.mini.number": "Продукт 06",
     "product.new": "Ново",
-    "mini.title": "Малки еклерчета",
+    "mini.title": "Мини еклери",
     "mini.copy": "По-малки по размер, но първенци по вкус. Нежен крем, любима глазура и перфектният размер за всеки сладък повод.",
     "roll.title": "Еклерово руло",
     "roll.copy": "Руло с пухкаво тесто и нежен крем, завършено със заливка по ваш избор, което се предлага по предварително направена поръчка.",
@@ -487,7 +487,7 @@ function anchorTop(entry) {
     ? Math.max(anchorOffset(), (window.innerHeight - rect.height) / 2)
     : anchorOffset();
   const limit = document.documentElement.scrollHeight - window.innerHeight;
-  return Math.max(0, Math.min(rect.top + window.scrollY - inset, limit));
+  return Math.max(0, Math.min(rect.top + window.scrollY - inset + (entry.scrollShift || 0), limit));
 }
 
 /* Everything we scroll past would load on the way anyway, so starting those
@@ -501,9 +501,10 @@ function preloadAbove(target) {
 
 let cancelAnchorScroll = null;
 
-function scrollToAnchor(hash) {
+function scrollToAnchor(hash, scrollShift = 0) {
   const entry = resolveAnchor(hash);
   if (!entry) return false;
+  entry.scrollShift = scrollShift;
 
   // a second link must take over, not wrestle the first one for the scrollbar
   if (cancelAnchorScroll) cancelAnchorScroll();
@@ -840,7 +841,7 @@ document.querySelectorAll("[data-product-target]").forEach((link) => {
       // Use the settling anchor scroll for the mobile header's New shortcut.
       if (link.classList.contains("mobile-new-seal")) {
         setMenu(false);
-        scrollToAnchor("#mini-eclairs");
+        scrollToAnchor("#mini-eclairs", 35);
         return;
       }
       productSlides[targetIndex]?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1439,3 +1440,28 @@ document.addEventListener("visibilitychange", () => {
   gestures.forEach(type => window.addEventListener(type, finish, { passive: true, once: true }));
   frame = requestAnimationFrame(restore);
 })();
+
+// Thin playback timelines; only advance frames while a clip is actually playing.
+document.querySelectorAll("[data-atelier-player], [data-selection-video]").forEach(video => {
+  const fill = video.parentElement.querySelector(".video-timeline span");
+  if (!fill) return;
+  let frame = 0;
+  function paint() {
+    const progress = Number.isFinite(video.duration) && video.duration > 0
+      ? Math.min(1, Math.max(0, video.currentTime / video.duration)) : 0;
+    fill.style.transform = `scaleX(${progress})`;
+  }
+  function tick() {
+    paint();
+    frame = !video.paused && !video.ended && !document.hidden ? requestAnimationFrame(tick) : 0;
+  }
+  function stop() {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    paint();
+  }
+  video.addEventListener("playing", () => { stop(); tick(); });
+  ["pause", "ended", "waiting", "emptied"].forEach(event => video.addEventListener(event, stop));
+  ["loadedmetadata", "durationchange", "timeupdate", "seeked"].forEach(event => video.addEventListener(event, paint));
+  paint();
+});
