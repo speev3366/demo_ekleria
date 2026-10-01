@@ -3183,3 +3183,20 @@ html.js-reveal [data-reveal].is-visible {
   .header-main .mobile-new-seal { width: 36px; height: 36px; }
   .brand span { font-size: 1.08rem; }
 }
+/* Compact, equally aligned announcement paragraphs on phones only. */
+@media (max-width: 640px) {
+  .market-announcement { flex-direction: column; gap: 7px; padding: 8px 14px; }
+  .market-announcement > p {
+    flex: none;
+    width: 100%;
+    max-width: 400px;
+    font-size: clamp(9px, 3vw, 12px);
+    line-height: 1.5;
+    text-align: justify;
+    text-align-last: justify;
+    text-wrap: balance;
+  }
+  .market-order { padding-bottom: 7px; }
+  .market-address-link { gap: 3px; }
+  .market-address-link svg { width: 1em; height: 1em; }
+}

@@ -836,6 +836,13 @@ document.querySelectorAll("[data-product-target]").forEach((link) => {
     const targetIndex = Math.min(Math.max(Number(link.dataset.productTarget) || 0, 0), productSlides.length - 1);
 
     if (window.innerWidth <= 980) {
+      // The first visit loads images above the product and shifts its position.
+      // Use the settling anchor scroll for the mobile header's New shortcut.
+      if (link.classList.contains("mobile-new-seal")) {
+        setMenu(false);
+        scrollToAnchor("#mini-eclairs");
+        return;
+      }
       productSlides[targetIndex]?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
