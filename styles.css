@@ -3200,5 +3200,5 @@ html.js-reveal [data-reveal].is-visible {
   .market-address-link { gap: 3px; }
   .market-address-link svg { width: 1em; height: 1em; }
   .hero-video,
-  .hero-video-bg { translate: 0 var(--hero-mobile-offset, 48px); }
+  .hero-video-bg { translate: 0 20px; }
 }

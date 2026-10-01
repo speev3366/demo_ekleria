@@ -3,6 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+      // Read the tab's saved position before the browser follows an old fragment.
+      try {
+        if (matchMedia("(max-width: 980px)").matches &&
+            performance.getEntriesByType("navigation")[0]?.type === "reload" &&
+            sessionStorage.getItem("ekleria:mobile-position:" + location.pathname)) {
+          history.scrollRestoration = "manual";
+        }
+      } catch (_) { /* Native restoration remains available if storage is blocked. */ }
+    </script>
     <meta name="description" content="Пекарна Еклерия във Варна – пресни еклери по оригинална рецепта, еклери по поръчка и предложения за кафенета, магазини, хотели и ресторанти.">
     <link rel="canonical" href="https://ekleria.bg/">
     <meta name="robots" content="index, follow">
@@ -31,7 +41,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=gold-noir-109">
+    <link rel="stylesheet" href="styles.css?v=gold-noir-110">
 
     <script type="application/ld+json">
     {
@@ -544,7 +554,7 @@
       <span class="footer-copy" data-i18n="footer.copyright">© 2026 Пекарна Еклерия. Специализирана пекарна за еклери във Варна. Всички права запазени.</span>
     </footer>
 
-    <script src="script.js?v=gold-noir-58"></script>
+    <script src="script.js?v=gold-noir-59"></script>
   </body>
 </html>
 

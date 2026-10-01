@@ -584,10 +584,6 @@ const header = document.querySelector(".site-header");
 if (header && "ResizeObserver" in window) {
   new ResizeObserver(() => {
     document.documentElement.style.setProperty("--header-h", `${Math.ceil(header.getBoundingClientRect().height) + 10}px`);
-    const announcement = header.querySelector(".market-announcement");
-    if (announcement) {
-      document.documentElement.style.setProperty("--hero-mobile-offset", `${announcement.getBoundingClientRect().height / 2}px`);
-    }
   }).observe(header);
 }
 
@@ -1375,3 +1371,71 @@ document.addEventListener("visibilitychange", () => {
     }
   });
 });
+// Restore the actual mobile reading position on reload, not a stale menu hash.
+(function initMobileReloadPosition() {
+  const mobile = window.matchMedia("(max-width: 980px)");
+  const blocks = Array.from(document.querySelectorAll("main section:not([hidden]), .product-slide"));
+  const storageKey = "ekleria:mobile-position:" + location.pathname;
+  let saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem(storageKey)); } catch (_) {}
+  const reloading = performance.getEntriesByType("navigation")[0]?.type === "reload";
+  let restoring = false;
+  function remember() {
+    if (!mobile.matches || restoring) return;
+    const y = window.scrollY;
+    let index = -1;
+    let top = 0;
+    blocks.forEach((block, i) => {
+      const candidate = block.getBoundingClientRect().top + y;
+      if (block.getClientRects().length && candidate <= y + 1 && candidate >= top) {
+        index = i;
+        top = candidate;
+      }
+    });
+    try {
+      sessionStorage.setItem(storageKey, JSON.stringify({ y, index, offset: y - top }));
+    } catch (_) { /* Do not interrupt navigation when browser storage is blocked. */ }
+  }
+  window.addEventListener("pagehide", remember);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) remember(); });
+  if (!mobile.matches || !reloading || !saved || !Number.isFinite(saved.y)) return;
+  restoring = true;
+  history.scrollRestoration = "manual";
+  const root = document.documentElement;
+  const previousBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = "auto";
+  // Reserve and load the content above the saved reading point before settling.
+  preloadAbove(saved.y + window.innerHeight * 2);
+  let frame = 0;
+  let stableSince = 0;
+  let lastTarget = -1;
+  let stopped = false;
+  const deadline = performance.now() + 8000;
+  const gestures = ["touchstart", "wheel", "keydown", "pointerdown"];
+  function finish() {
+    if (stopped) return;
+    stopped = true;
+    cancelAnimationFrame(frame);
+    root.style.scrollBehavior = previousBehavior;
+    history.scrollRestoration = "auto";
+    restoring = false;
+    gestures.forEach(type => window.removeEventListener(type, finish));
+  }
+  function restore(now) {
+    if (stopped) return;
+    const block = blocks[saved.index];
+    const target = saved.y < 2 ? 0 : block
+      ? block.getBoundingClientRect().top + window.scrollY + saved.offset
+      : saved.y;
+    window.scrollTo(0, target);
+    if (Math.abs(target - lastTarget) > 1) stableSince = now;
+    lastTarget = target;
+    if ((document.readyState === "complete" && document.fonts.status === "loaded" && now - stableSince > 1200) || now > deadline) {
+      finish();
+      return;
+    }
+    frame = requestAnimationFrame(restore);
+  }
+  gestures.forEach(type => window.addEventListener(type, finish, { passive: true, once: true }));
+  frame = requestAnimationFrame(restore);
+})();
