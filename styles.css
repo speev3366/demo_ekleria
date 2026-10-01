@@ -3192,11 +3192,13 @@ html.js-reveal [data-reveal].is-visible {
     max-width: 400px;
     font-size: clamp(9px, 3vw, 12px);
     line-height: 1.5;
-    text-align: justify;
-    text-align-last: justify;
+    text-align: center;
+    text-align-last: center;
     text-wrap: balance;
   }
   .market-order { padding-bottom: 7px; }
   .market-address-link { gap: 3px; }
   .market-address-link svg { width: 1em; height: 1em; }
+  .hero-video,
+  .hero-video-bg { translate: 0 var(--hero-mobile-offset, 48px); }
 }

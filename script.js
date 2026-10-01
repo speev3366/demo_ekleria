@@ -584,6 +584,10 @@ const header = document.querySelector(".site-header");
 if (header && "ResizeObserver" in window) {
   new ResizeObserver(() => {
     document.documentElement.style.setProperty("--header-h", `${Math.ceil(header.getBoundingClientRect().height) + 10}px`);
+    const announcement = header.querySelector(".market-announcement");
+    if (announcement) {
+      document.documentElement.style.setProperty("--hero-mobile-offset", `${announcement.getBoundingClientRect().height / 2}px`);
+    }
   }).observe(header);
 }
 
